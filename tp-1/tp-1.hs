@@ -54,8 +54,8 @@ siguiente :: Dir -> Dir
 --la siguiente dirección a Oeste. ¾Posee una precondición esta función? ¾Es una función
 --total o parcial? ¾Por qué?
 siguiente Norte = Este 
-siguiente Este = Sur 
-siguiente Sur  = Oeste
+siguiente Este  = Sur 
+siguiente Sur   = Oeste
 siguiente Oeste = Norte 
 
 -- Si no existiera una dir siguiente a Oeste, entonces deberia de haber una precondicion y por ende parcial.
@@ -72,7 +72,7 @@ primeroYUltimoDia = (Lunes, Domingo)
 --2.b) 
 empiezaConM :: DiaDeSemana -> Bool
 --Dado un día de la semana indica si comienza con la letra M.
-empiezaConM Martes = True 
+empiezaConM Martes     = True 
 empiezaConM Miercoles  = True 
 empiezaConM _          = False 
 --2.c) 
@@ -142,28 +142,28 @@ data Persona = P String Int
             deriving Show
                   -- Nombre Edad
 
---4.a)
+--1.a)
 nombre :: Persona -> String
 --Devuelve el nombre de una persona
 nombre (P n _) = n 
---4.b)
+--1.b)
 edad :: Persona -> Int
 --Devuelve la edad de una persona
 edad (P _ e) = e 
---4.c)
+--1.c)
 crecer :: Persona -> Persona
 --Aumenta en uno la edad de la persona.
 crecer (P n e ) = (P n (e+1))
---4.d)
+--1.d)
 cambioDeNombre :: String -> Persona -> Persona
 --Dados un nombre y una persona, devuelve una persona con la edad de la persona y el
 --nuevo nombre.
 cambioDeNombre nn (P n e ) = (P nn e)
---4.e)
+--1.e)
 esMayorQueLaOtra :: Persona -> Persona -> Bool
 --Dadas dos personas indica si la primera es mayor que la segunda.
 esMayorQueLaOtra p1 p2 = edad p1 > edad p2 
---4.f)
+--1.f)
 laQueEsMayor :: Persona -> Persona -> Persona
 --Dadas dos personas devuelve a la persona que sea mayor.
 laQueEsMayor p1 p2 = if (esMayorQueLaOtra p1 p2) then p1 else p2 
@@ -181,7 +181,7 @@ matias = (P "Matias" 30)
 -- porcentaje de energía; y Entrenador, como un nombre y dos Pokémon. Luego denir las
 -- siguientes funciones:
 
-data Pokemon       = Pk TipoDePokemon Entrenador 
+data Pokemon       = Pk TipoDePokemon Int
                     deriving Show
 data TipoDePokemon = Agua | Fuego | Planta 
                     deriving Show
@@ -189,22 +189,26 @@ data Entrenador    = E String Pokemon Pokemon
                     deriving Show
 
 ash :: Entrenador
-ash = (E "Ash" pikachu charmander)
+ash = (E "Ash" (pikachu) (charmander))
 
 e2 :: Entrenador
-e2 = (E "e2" pikachu charmander)
+e2 = (E "e2" (pikachu) (charmander))
+
+
 
 charmander :: Pokemon
-charmander =  (Pk Fuego ash)  
+charmander =  (Pk Fuego 30)  
 
 pikachu :: Pokemon
-pikachu = (Pk Agua ash )
+pikachu = (Pk Agua 50)
 
+--2.a)
 superaA :: Pokemon -> Pokemon -> Bool
 --Dados dos Pokémon indica si el primero, en base al tipo, es superior al segundo. Agua
 --supera a fuego, fuego a planta y planta a agua. Y cualquier otro caso es falso.
 superaA (Pk t1 _) (Pk t2 _ ) = esMasFuerte t1 t2 
 
+--2.b)
 esMasFuerte :: TipoDePokemon -> TipoDePokemon  -> Bool 
 esMasFuerte Agua Fuego   = True
 esMasFuerte Fuego Planta = True 
@@ -229,12 +233,13 @@ unoSi :: Bool -> Int
 unoSi True  = 1 
 unoSi False = 0 
 
+--2.c)
 juntarPokemon :: (Entrenador, Entrenador) -> [Pokemon]
 --Dado un par de entrenadores, devuelve a sus Pokémon en una lista
-juntarPokemon (e1, e2) = pokemonesDe e1 ++ pokemonesDe e2  
+juntarPokemon (e1, e2) = listaPokemonDe e1 ++ listaPokemonDe e2  
 
-pokemonesDe :: Entrenador -> [Pokemon]
-pokemonesDe (E _ p1 p2 ) = [p1, p2]
+listaPokemonDe :: Entrenador -> [Pokemon]
+listaPokemonDe (E _ p1 p2 ) = [p1,p2]
 
 --5) Funciones polimórcas
 --5.1) Defina las siguientes funciones polimórcas:
@@ -252,18 +257,22 @@ siempreSiete a = 7
 swap :: (a,b) -> (b, a)
 --Dadas una tupla, invierte sus componentes.
 swap (a,b) = (b,a)
+{-
 
---¾Por qué existen dos variables de tipo diferentes?
+¾Por qué existen dos variables de tipo diferentes?
+ - Porque asi expresas que la funcion requiere dos argumentos de distinto tipo, aunque no rompa si le das del mismo. 
+2. Responda la siguiente pregunta: ¾Por qué estas funciones son polimórcas?
+ - Porque puede ir cualquier tipo de elemento en ellas.
 
---2. Responda la siguiente pregunta: ¾Por qué estas funciones son polimórcas?
--- Porque puede ir cualquier tipo de elemento en ellas. 
 
---6)
---6.1) Pattern matching sobre listas
+6)
+6.1) Pattern matching sobre lista
+1.a)
+ Defina las siguientes funciones polimórcas utilizando pattern matching sobre listas (no
+utilizar las funciones que ya vienen con Haskell):
 
---1.a)
--- Defina las siguientes funciones polimórcas utilizando pattern matching sobre listas (no
---utilizar las funciones que ya vienen con Haskell):
+-}
+
 
 --1.b) 
 estaVacia :: [a] -> Bool
