@@ -133,6 +133,106 @@ oBien :: Bool -> Bool -> Bool
 oBien False b = b 
 oBien True  _ = True
 
+--4.1)
+
+--1. Denir el tipo de dato Persona, como un nombre y la edad de la persona. Realizar las siguientes funciones:
 
 
+data Persona = P String Int 
+            deriving Show
+                  -- Nombre Edad
+
+--4.a)
+nombre :: Persona -> String
+--Devuelve el nombre de una persona
+nombre (P n _) = n 
+--4.b)
+edad :: Persona -> Int
+--Devuelve la edad de una persona
+edad (P _ e) = e 
+--4.c)
+crecer :: Persona -> Persona
+--Aumenta en uno la edad de la persona.
+crecer (P n e ) = (P n (e+1))
+--4.d)
+cambioDeNombre :: String -> Persona -> Persona
+--Dados un nombre y una persona, devuelve una persona con la edad de la persona y el
+--nuevo nombre.
+cambioDeNombre nn (P n e ) = (P nn e)
+--4.e)
+esMayorQueLaOtra :: Persona -> Persona -> Bool
+--Dadas dos personas indica si la primera es mayor que la segunda.
+esMayorQueLaOtra p1 p2 = edad p1 > edad p2 
+--4.f)
+laQueEsMayor :: Persona -> Persona -> Persona
+--Dadas dos personas devuelve a la persona que sea mayor.
+laQueEsMayor p1 p2 = if (esMayorQueLaOtra p1 p2) then p1 else p2 
+
+
+mateo :: Persona 
+mateo = (P "Mateo" 19)     
+
+matias :: Persona 
+matias = (P "Matias" 30) 
+
+
+--4.2) 
+-- Denir los tipos de datos Pokemon, como un TipoDePokemon (agua, fuego o planta) y un
+-- porcentaje de energía; y Entrenador, como un nombre y dos Pokémon. Luego denir las
+-- siguientes funciones:
+
+data Pokemon       = Pk TipoDePokemon Entrenador 
+                    deriving Show
+data TipoDePokemon = Agua | Fuego | Planta 
+                    deriving Show
+data Entrenador    = E String Pokemon Pokemon
+                    deriving Show
+
+ash :: Entrenador
+ash = (E "Ash" pikachu charmander)
+
+e2 :: Entrenador
+e2 = (E "e2" pikachu charmander)
+
+charmander :: Pokemon
+charmander =  (Pk Fuego ash)  
+
+pikachu :: Pokemon
+pikachu = (Pk Agua ash )
+
+superaA :: Pokemon -> Pokemon -> Bool
+--Dados dos Pokémon indica si el primero, en base al tipo, es superior al segundo. Agua
+--supera a fuego, fuego a planta y planta a agua. Y cualquier otro caso es falso.
+superaA (Pk t1 _) (Pk t2 _ ) = esMasFuerte t1 t2 
+
+esMasFuerte :: TipoDePokemon -> TipoDePokemon  -> Bool 
+esMasFuerte Agua Fuego   = True
+esMasFuerte Fuego Planta = True 
+esMasFuerte Planta Agua  = True 
+esMasFuerte _      _     = False 
+
+cantidadDePokemonDe :: TipoDePokemon -> Entrenador -> Int
+--Devuelve la cantidad de Pokémon de determinado tipo que posee el entrenador.
+cantidadDePokemonDe tipo (E _ p1 p2) = unoSi (estePokemonEsTipo p1 tipo) + unoSi (estePokemonEsTipo p2 tipo)
+
+estePokemonEsTipo :: Pokemon -> TipoDePokemon -> Bool
+-- Indica si el pokemon dado es del tipo dado. 
+estePokemonEsTipo (Pk t _ ) tipo =  sonIguales t tipo 
+
+sonIguales :: TipoDePokemon -> TipoDePokemon -> Bool 
+sonIguales Agua Agua     = True  
+sonIguales Fuego Fuego   = True 
+sonIguales Planta Planta = True 
+sonIguales _      _      = False
+
+unoSi :: Bool -> Int 
+unoSi True  = 1 
+unoSi False = 0 
+
+juntarPokemon :: (Entrenador, Entrenador) -> [Pokemon]
+--Dado un par de entrenadores, devuelve a sus Pokémon en una lista
+juntarPokemon (e1, e2) = pokemonesDe e1 ++ pokemonesDe e2  
+
+pokemonesDe :: Entrenador -> [Pokemon]
+pokemonesDe (E _ p1 p2 ) = [p1, p2]
 
