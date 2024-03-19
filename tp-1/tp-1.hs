@@ -104,7 +104,7 @@ nroDiaSemanal Domingo   = 7
 --3.a) 
 negar :: Bool -> Bool
 --Dado un booleano, si es True devuelve False, y si es False devuelve True.
---En Haskell ya está denida como not.
+--En Haskell ya está Definida como not.
 negar True  = False 
 negar False = True 
 
@@ -121,7 +121,7 @@ implica False _ = True
 yTambien :: Bool -> Bool -> Bool
 --Dados dos booleanos si ambos son True devuelve True, sino devuelve False.
 --Esta función NO debe realizar doble pattern matching.
---En Haskell ya está denida como \&\&.
+--En Haskell ya está Definida como \&\&.
 yTambien True b  = b
 yTambien False _ = False 
 
@@ -129,7 +129,7 @@ yTambien False _ = False
 oBien :: Bool -> Bool -> Bool
 --Dados dos booleanos si alguno de ellos es True devuelve True, sino devuelve False.
 --Esta función NO debe realizar doble pattern matching.
---En Haskell ya está denida como ||.
+--En Haskell ya está Definida como ||.
 oBien False b = b 
 oBien True  _ = True
 
@@ -236,3 +236,58 @@ juntarPokemon (e1, e2) = pokemonesDe e1 ++ pokemonesDe e2
 pokemonesDe :: Entrenador -> [Pokemon]
 pokemonesDe (E _ p1 p2 ) = [p1, p2]
 
+--5) Funciones polimórcas
+--5.1) Defina las siguientes funciones polimórcas:
+
+--1.a) 
+loMismo :: a -> a
+--Dado un elemento de algún tipo devuelve ese mismo elemento.
+loMismo a = a 
+
+--1.b) 
+siempreSiete :: a -> Int
+--Dado un elemento de algún tipo devuelve el número 7.
+siempreSiete a = 7 
+--1.c) 
+swap :: (a,b) -> (b, a)
+--Dadas una tupla, invierte sus componentes.
+swap (a,b) = (b,a)
+
+--¾Por qué existen dos variables de tipo diferentes?
+
+--2. Responda la siguiente pregunta: ¾Por qué estas funciones son polimórcas?
+-- Porque puede ir cualquier tipo de elemento en ellas. 
+
+--6)
+--6.1) Pattern matching sobre listas
+
+--1.a)
+-- Defina las siguientes funciones polimórcas utilizando pattern matching sobre listas (no
+--utilizar las funciones que ya vienen con Haskell):
+
+--1.b) 
+estaVacia :: [a] -> Bool
+--Dada una lista de elementos, si es vacía devuelve True, sino devuelve False.
+--Definida en Haskell como null.
+estaVacia [] = True 
+estaVacia _  = False 
+--1.c) 
+elPrimero :: [a] -> a
+--Dada una lista devuelve su primer elemento.
+--Definida en Haskell como head.
+--Nota: tener en cuenta que el constructor de listas es :
+elPrimero (a:_) = a 
+
+--1.d) 
+sinElPrimero :: [a] -> [a]
+--Dada una lista devuelve esa lista menos el primer elemento.
+--Definida en Haskell como tail.
+--Nota: tener en cuenta que el constructor de listas es :
+sinElPrimero (_:xs) = xs 
+
+--1.e) 
+splitHead :: [a] -> (a, [a])
+--Dada una lista devuelve un par, donde la primera componente es el primer elemento de la
+--lista, y la segunda componente es esa lista pero sin el primero.
+--Nota: tener en cuenta que el constructor de listas es :
+splitHead (x:xs) = (x, xs)
