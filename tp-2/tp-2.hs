@@ -82,12 +82,8 @@ reversa :: [a] -> [a]
 --Dada una lista devuelve la lista con los mismos elementos de atrás para adelante. Denida
 --en Haskell como reverse.
 reversa []     = []
-reversa (x:xs) = x : tail (reversa xs) 
+reversa (x:xs) = agregarAlFinal (reversa xs) x 
 
--- [1,2,3,4]
--- 1:2:3:4:[]
--- 1 : [2,3,4]
--- 4:3:2:1:[]
 --14. 
 zipMaximos :: [Int] -> [Int] -> [Int]
 --Dadas dos listas de enteros, devuelve una lista donde el elemento en la posición n es el
@@ -122,13 +118,22 @@ cuentaRegresiva :: Int -> [Int]
 cuentaRegresiva 1 = []
 cuentaRegresiva n = n - 1 : cuentaRegresiva n 
 --3. 
---repetir :: Int -> a -> [a]
-----Dado un número n y un elemento e devuelve una lista en la que el elemento e repite n veces.
-----4. 
---losPrimeros :: Int -> [a] -> [a]
-----Dados un número n y una lista xs, devuelve una lista con los n primeros elementos de xs.
-----Si la lista es vacía, devuelve una lista vacía.
-----5. 
---sinLosPrimeros :: Int -> [a] -> [a]
-----Dados un número n y una lista xs, devuelve una lista sin los primeros n elementos de lista
-----recibida. Si n es cero, devuelve la lista completa.
+repetir :: Int -> a -> [a]
+--Dado un número n y un elemento e devuelve una lista en la que el elemento e repite n veces.
+repetir 0 _      = []
+repetir n x = x : repetir (n-1) x
+--4. 
+losPrimeros :: Int -> [a] -> [a]
+--Dados un número n y una lista xs, devuelve una lista con los n primeros elementos de xs.
+--Si la lista es vacía, devuelve una lista vacía.
+losPrimeros 0  _ = []
+losPrimeros _ [] = []
+losPrimeros n (x:xs) = x : losPrimeros (n-1) xs
+
+--5. 
+sinLosPrimeros :: Int -> [a] -> [a]
+--Dados un número n y una lista xs, devuelve una lista sin los primeros n elementos de lista
+--recibida. Si n es cero, devuelve la lista completa.
+sinLosPrimeros 0 xs = xs 
+sinLosPrimeros _ [] = []
+sinLosPrimeros n (x:xs) = sinLosPrimeros (n-1) xs 
