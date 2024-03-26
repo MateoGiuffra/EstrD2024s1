@@ -1,10 +1,3 @@
-{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
-{-# HLINT ignore "Use map" #-}
-{-# HLINT ignore "Use camelCase" #-}
-{-# HLINT ignore "Redundant bracket" #-}
-{-# HLINT ignore "Eta reduce" #-}
-{-# HLINT ignore "Use foldr" #-}
-{-# HLINT ignore "Use newtype instead of data" #-}
 num = [1,2,3,4,5,6,7,8,9,10]
 
 sumatoria :: [Int] -> Int
