@@ -1,3 +1,10 @@
+{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
+{-# HLINT ignore "Use map" #-}
+{-# HLINT ignore "Use camelCase" #-}
+{-# HLINT ignore "Redundant bracket" #-}
+{-# HLINT ignore "Eta reduce" #-}
+{-# HLINT ignore "Use foldr" #-}
+{-# HLINT ignore "Use newtype instead of data" #-}
 num = [1,2,3,4,5,6,7,8,9,10]
 
 sumatoria :: [Int] -> Int
@@ -91,10 +98,13 @@ zipMaximos :: [Int] -> [Int] -> [Int]
 --las listas no necesariamente tienen la misma longitud.
 zipMaximos xs      []    = xs 
 zipMaximos []      ys    = ys 
-zipMaximos (x:xs) (y:ys) = if x > y then x : zipMaximos xs ys else y : zipMaximos xs ys  
+zipMaximos (x:xs) (y:ys) = if x > y 
+                              then x : zipMaximos xs ys 
+                              else y : zipMaximos xs ys  
 --15. 
 elMinimo :: Ord a => [a] -> a
 --Dada una lista devuelve el mínimo
+-- PRECONDICION: La lista no puede ser vacia. 
 elMinimo []     = error "Es una lista vacia"
 elMinimo (x:[]) = x 
 elMinimo (x:xs) = if x < elMinimo xs 
@@ -292,9 +302,24 @@ hayUnoDelTipo t (pk:pks) = pokemonEsDeTipo t pk || hayUnoDelTipo t pks
 --de una empresa de software, junto al proyecto en el que se encuentran. Así, una empresa es
 --una lista de personas con diferente rol. La denición es la siguiente:
 data Seniority = Junior | SemiSenior | Senior
+                  deriving Show
 data Proyecto = Pr String
+                  deriving Show
 data Rol = Developer Seniority Proyecto | Management Seniority Proyecto
+                  deriving Show
 data Empresa = Em [Rol]
+                  deriving Show
+
+pr1 = Pr "p1"
+pr2 = Pr "p2"
+pr3 = Pr "p3"
+pr4 = Pr "p4"
+emp1 = Developer Senior pr2 
+emp2 = Developer Senior pr2 
+emp3 = Management Senior pr4
+emp4 = Management Junior pr4 
+
+empresa = Em [emp1, emp2, emp3, emp4]
 
 --Denir las siguientes funciones sobre el tipo Empresa:
 
@@ -329,8 +354,6 @@ losDevSenior :: Empresa -> [Proyecto] -> Int
 --Dada una empresa indica la cantidad de desarrolladores senior que posee, 
 -- que pertecen además a los proyectos dados por parámetro.
 losDevSenior (Em rs) ps = cantDevSenior rs ps 
--- Suponiendo que tengo una lista con tres proyectos y el devSenior  pertenece a 2 de los 3, entonces 
--- no lo cuento?  
 
 
 cantDevSenior :: [Rol] -> [Proyecto] -> Int  
@@ -342,7 +365,7 @@ trabajaEnLosProyectos _ []     = True
 trabajaEnLosProyectos r (p:ps) = trabajaEnElProyecto r p && trabajaEnLosProyectos r ps 
 
 trabajaEnElProyecto :: Rol -> Proyecto -> Bool 
-trabajaEnElProyecto r p = nombreDel p == nombreDel (proyectoDelEmp r)
+trabajaEnElProyecto r p = sonElMismoProy p  (proyectoDelEmp r)
 
 
 proyectoDelEmp :: Rol -> Proyecto 
@@ -374,7 +397,20 @@ trabajaEnAlgunProyecto r (p:ps) = trabajaEnElProyecto r p || trabajaEnAlgunProye
 
 
 -- 1.d)
---asignadosPorProyecto :: Empresa -> [(Proyecto, Int)]
-----Devuelve una lista de pares que representa a los proyectos (sin repetir) junto con su
-----cantidad de personas involucradas.
---asignadosPorProyecto 
+asignadosPorProyecto :: Empresa -> [(Proyecto, Int)] 
+--Devuelve una lista de pares que representa a los proyectos (sin repetir) junto con su
+--cantidad de personas involucradas.
+asignadosPorProyecto (Em rs) =  asignados rs 
+
+asignados :: [Rol] ->  [(Proyecto, Int)] 
+asignados []     = [] 
+asignados (r:rs) = asignadosPorTuplas (proyectoDe r) (asignados rs) 
+
+asignadosPorTuplas :: Proyecto -> [(Proyecto, Int)] -> [(Proyecto, Int)]
+asignadosPorTuplas p []            = (p,1) : [] 
+asignadosPorTuplas p ((p1, n): ps) = if sonElMismoProy p p1 
+                                          then ((p1, n+1): ps)  
+                                          else ((p1, n)  : asignadosPorTuplas p ps)  
+
+sonElMismoProy :: Proyecto -> Proyecto -> Bool 
+sonElMismoProy p1 p2 = nombreDel p1 == nombreDel p2 
