@@ -31,7 +31,7 @@ maxDelPar (10,1)
 -- 3.1)
 
 data Dir = Norte | Sur | Oeste | Este
-
+            deriving Show
 --1.a) 
 opuesto :: Dir -> Dir
 --Dada una dirección devuelve su opuesta.
@@ -53,12 +53,14 @@ siguiente :: Dir -> Dir
 --Dada una dirección devuelve su siguiente, en sentido horario, y suponiendo que no existe
 --la siguiente dirección a Oeste. ¾Posee una precondición esta función? ¾Es una función
 --total o parcial? ¾Por qué?
+-- PRECONDICION: Oeste no posee Dir siguiente. 
 siguiente Norte = Este 
 siguiente Este  = Sur 
 siguiente Sur   = Oeste
-siguiente Oeste = Norte 
+siguiente Oeste = error ("Oeste no tiene Dir siguiente")
 
--- Si no existiera una dir siguiente a Oeste, entonces deberia de haber una precondicion y por ende parcial.
+-- Si no existiera una dir siguiente a Oeste, entonces deberia de haber una precondicion y por ende 
+-- es una funcion parcial.
 
 --3.2)
 data DiaDeSemana = Lunes | Martes | Miercoles | Jueves | Viernes | Sabado | Domingo
