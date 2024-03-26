@@ -275,20 +275,17 @@ pokemonEsDeTipo :: TipoDePokemon -> Pokemon  -> Bool
 pokemonEsDeTipo t (PK tp _) = sonIguales tp t 
 
 
--- --1.d)
--- esMaestroPokemon :: Entrenador -> Bool
--- --Dado un entrenador, devuelve True si posee al menos un Pokémon de cada tipo posible.
--- esMaestroPokemon (E _ pks) = hayUnoDeCadaTipo  pks 
--- -- estaria bien resolverlo aca? 
+--1.d)
+esMaestroPokemon :: Entrenador -> Bool
+--Dado un entrenador, devuelve True si posee al menos un Pokémon de cada tipo posible.
+esMaestroPokemon (E _ pks) = hayUnoDelTipo Fuego pks && 
+                             hayUnoDelTipo Agua  pks && 
+                             hayUnoDelTipo Planta pks 
 
-
--- hayUnoDeCadaTipo :: [Pokemon] -> Bool 
--- hayUnoDeCadaTipo []       = 
--- hayUnoDeCadaTipo (pk:pks) = pokemonEsDeTipo pk Fuego && pokemonEsDeTipo pk Fuego &&  pokemonEsDeTipo pk Fuego && hayUnoDeCadaTipo pks  
-
--- [Fuego, Agua, Planta]
--- Fuego : Agua : Planta : []
--- Fuego : Agua : []
+hayUnoDelTipo :: TipoDePokemon -> [Pokemon] -> Bool 
+-- PROPOSITO: Dada una lista de pokemones, indica si existe algun pokemon del TipoDePokemon dado. 
+hayUnoDelTipo _ []       = False 
+hayUnoDelTipo t (pk:pks) = pokemonEsDeTipo t pk || hayUnoDelTipo t pks   
 
 
 --3. El tipo de dato Rol representa los roles (desarollo o management) de empleados IT dentro
@@ -328,28 +325,56 @@ nombreDel :: Proyecto -> String
 nombreDel (Pr n) = n 
 
 --1.b)
--- losDevSenior :: Empresa -> [Proyecto] -> Int
--- --Dada una empresa indica la cantidad de desarrolladores senior que posee, que pertecen además a los proyectos dados por parámetro.
--- losDevSenior (Em rs) ps = cantDevSenior rs  ps 
--- 
--- cantDevSenior :: [Rol] -> Int  
--- cantDevSenior [] = 0 
--- cantDevSenior (r:rs) = unoSi (esDeveloper r && esSenior r) + cantDevSenior rs 
--- 
--- esSenior :: Rol -> Bool 
--- esSenior (Developer Senior _)   =  True 
--- esSenior (Management Senior  _) =  True
--- esSenior _                      = False   
--- 
--- esDeveloper :: Rol -> Bool 
--- esDeveloper (Developer _ _ ) = True 
--- esDeveloper (Management _ _) = False 
--- 
+losDevSenior :: Empresa -> [Proyecto] -> Int
+--Dada una empresa indica la cantidad de desarrolladores senior que posee, 
+-- que pertecen además a los proyectos dados por parámetro.
+losDevSenior (Em rs) ps = cantDevSenior rs ps 
+-- Suponiendo que tengo una lista con tres proyectos y el devSenior  pertenece a 2 de los 3, entonces 
+-- no lo cuento?  
+
+
+cantDevSenior :: [Rol] -> [Proyecto] -> Int  
+cantDevSenior [] _      = 0 
+cantDevSenior (r:rs) ps = unoSi (esDeveloper r && esSenior r && trabajaEnLosProyectos r ps) + cantDevSenior rs ps
+
+trabajaEnLosProyectos :: Rol -> [Proyecto] -> Bool 
+trabajaEnLosProyectos _ []     = True 
+trabajaEnLosProyectos r (p:ps) = trabajaEnElProyecto r p && trabajaEnLosProyectos r ps 
+
+trabajaEnElProyecto :: Rol -> Proyecto -> Bool 
+trabajaEnElProyecto r p = nombreDel p == nombreDel (proyectoDelEmp r)
+
+
+proyectoDelEmp :: Rol -> Proyecto 
+proyectoDelEmp (Developer _ p ) = p 
+proyectoDelEmp (Management _ p) = p 
+
+esSenior :: Rol -> Bool 
+esSenior (Developer Senior _)   =  True 
+esSenior (Management Senior  _) =  True
+esSenior _                      = False   
+
+esDeveloper :: Rol -> Bool 
+esDeveloper (Developer _ _ ) = True 
+esDeveloper (Management _ _) = False 
+
 ----1.c)
---cantQueTrabajanEn :: [Proyecto] -> Empresa -> Int
+cantQueTrabajanEn :: [Proyecto] -> Empresa -> Int
 ----Indica la cantidad de empleados que trabajan en alguno de los proyectos dados.
---
-----1.d)
+cantQueTrabajanEn ps (Em rs) = cantTrabajadores ps rs 
+
+cantTrabajadores :: [Proyecto] -> [Rol] -> Int 
+cantTrabajadores [] _  = 0 
+cantTrabajadores _  [] = 0     
+cantTrabajadores ps (r:rs) = unoSi (trabajaEnAlgunProyecto r ps) + cantTrabajadores ps rs  
+
+trabajaEnAlgunProyecto :: Rol -> [Proyecto] -> Bool 
+trabajaEnAlgunProyecto _ []     = False 
+trabajaEnAlgunProyecto r (p:ps) = trabajaEnElProyecto r p || trabajaEnAlgunProyecto  r ps 
+
+
+-- 1.d)
 --asignadosPorProyecto :: Empresa -> [(Proyecto, Int)]
 ----Devuelve una lista de pares que representa a los proyectos (sin repetir) junto con su
 ----cantidad de personas involucradas.
+--asignadosPorProyecto 
