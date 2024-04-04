@@ -305,6 +305,9 @@ data Rol = Developer Seniority Proyecto | Management Seniority Proyecto
 data Empresa = Em [Rol]
                   deriving Show
 
+--Denir las siguientes funciones sobre el tipo  Empresa:
+
+
 pr1 = Pr "p1"
 pr2 = Pr "p2"
 pr3 = Pr "p3"
@@ -315,8 +318,7 @@ emp3 = Management Senior pr4
 emp4 = Management Junior pr4 
 
 empresa = Em [emp1, emp2, emp3, emp4]
-
---Denir las siguientes funciones sobre el tipo Empresa:
+empresa2 = Em []
 
 --1.a)
 proyectos :: Empresa -> [Proyecto]
@@ -345,6 +347,9 @@ nombreDel :: Proyecto -> String
 nombreDel (Pr n) = n 
 
 --1.b)
+
+
+
 losDevSenior :: Empresa -> [Proyecto] -> Int
 --Dada una empresa indica la cantidad de desarrolladores senior que posee, 
 -- que pertecen además a los proyectos dados por parámetro.
@@ -353,11 +358,8 @@ losDevSenior (Em rs) ps = cantDevSenior rs ps
 
 cantDevSenior :: [Rol] -> [Proyecto] -> Int  
 cantDevSenior [] _      = 0 
-cantDevSenior (r:rs) ps = unoSi (esDeveloper r && esSenior r && trabajaEnLosProyectos r ps) + cantDevSenior rs ps
+cantDevSenior (r:rs) ps = unoSi (esDeveloper r && esSenior r && trabajaEnAlgunProyecto r ps) + cantDevSenior rs ps
 
-trabajaEnLosProyectos :: Rol -> [Proyecto] -> Bool 
-trabajaEnLosProyectos _ []     = True 
-trabajaEnLosProyectos r (p:ps) = trabajaEnElProyecto r p && trabajaEnLosProyectos r ps 
 
 trabajaEnElProyecto :: Rol -> Proyecto -> Bool 
 trabajaEnElProyecto r p = sonElMismoProy p  (proyectoDelEmp r)
