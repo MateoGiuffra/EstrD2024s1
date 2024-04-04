@@ -82,7 +82,7 @@ pasosHastaTesoro :: Camino -> Int
 --Si un cofre con un tesoro está al principio del camino, la cantidad de pasos a recorrer es 0.
 --Precondición: tiene que haber al menos un tesoro.
 pasosHastaTesoro Fin            = 0  
-pasosHastaTesoro (Nada  cm)     = 1 + pasosHastaTesoro cm -- -> si no se cuenta pasar por Nada como un paso, sacar el uno
+pasosHastaTesoro (Nada  cm)     = 1 + pasosHastaTesoro cm 
 pasosHastaTesoro (Cofre obs cm) = if (hayUnTesoro obs) 
                                     then pasosHastaTesoro Fin 
                                     else 1 + pasosHastaTesoro cm 
@@ -197,11 +197,8 @@ toList :: Tree a -> [a]
 --Dado un árbol devuelve una lista que representa el resultado de recorrerlo en modo in-order.
 --Nota: En el modo in-order primero se procesan los elementos del hijo izquierdo, luego la raiz y luego los elementos del hijo derecho.
 toList EmptyT            = []
-toList (NodeT n izq der) = leavesInvertido izq ++ [n] ++ leaves der
+toList (NodeT n izq der) = toList izq ++ [n] ++ toList der 
 
-leavesInvertido :: Tree a -> [a]
-leavesInvertido EmptyT = []
-leavesInvertido (NodeT n izq der) = leavesInvertido der ++ leavesInvertido izq ++ [n] 
 
 --1.k)
 levelN :: Int -> Tree a -> [a]
@@ -270,11 +267,14 @@ simplificar :: ExpA -> ExpA
 simplificar (Sum n m)  = simplificarSuma n  m 
 simplificar (Prod n m) = simplificarProd n  m 
 simplificar (Neg n)    = simplificarNeg  n 
+simplificar  n         = n 
 
 simplificarProd :: ExpA -> ExpA -> ExpA
-simplificarProd n m = if (es0 n || es0 m) 
-                        then (Valor 0 ) 
-                        else (Prod n m) 
+simplificarProd (Valor 1) m = m
+simplificarProd n (Valor 1) = n
+simplificarProd n m =  if (es0 n || es0 m) 
+                         then (Valor 0 ) 
+                         else (Prod n m) 
 
 simplificarSuma :: ExpA -> ExpA -> ExpA 
 simplificarSuma (Valor 0) m = m 
@@ -282,12 +282,11 @@ simplificarSuma n (Valor 0) = n
 simplificarSuma n    m      = (Sum n m)
 
 simplificarNeg :: ExpA -> ExpA 
-simplificarNeg n = if esNeg n then n else (Neg n) 
-
-esNeg :: ExpA -> Bool 
-esNeg (Valor n) = n != (n * (-1)) 
+simplificarNeg (Neg e) = e 
+simplificarNeg e       = (Neg e)
                   
 es0 :: ExpA -> Bool 
+es0 _         = False 
 es0 (Valor n) = n == 0
 
 -- a) 0 + x = x + 0 = x
