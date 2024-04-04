@@ -1,8 +1,5 @@
 --1.1)
 
-
-
-
 data Color = Azul | Rojo 
             deriving Show  
 data Celda = Bolita Color Celda | CeldaVacia
@@ -139,7 +136,9 @@ arbol1 =                (NodeT 1
                                  (NodeT 2 EmptyT EmptyT)  (NodeT 6 (NodeT 6 EmptyT EmptyT) 
                                                                         (NodeT 8 EmptyT EmptyT)))    EmptyT)    
                                                                                                     -- este EmptyT iria dos lineas arriba 
-
+arbol2 :: Tree Int 
+arbol2 = (NodeT 1 (NodeT 2 (NodeT 4 EmptyT EmptyT)(NodeT 6 (NodeT 8 EmptyT EmptyT) EmptyT)) (NodeT 3 (NodeT 5 EmptyT EmptyT) (NodeT 7 EmptyT EmptyT)))
+-- (8,6,4,2,1,3,5,7)
 
 --1.a) 
 sumarT :: Tree Int -> Int
@@ -194,17 +193,15 @@ mirrorT EmptyT            = EmptyT
 mirrorT (NodeT n izq der) = (NodeT n der izq )
 
 --1.j)
--- toList :: Tree a -> [a]
+toList :: Tree a -> [a]
 --Dado un árbol devuelve una lista que representa el resultado de recorrerlo en modo in-order.
 --Nota: En el modo in-order primero se procesan los elementos del hijo izquierdo, luego la raiz y luego los elementos del hijo derecho.
+toList EmptyT            = []
+toList (NodeT n izq der) = leavesInvertido izq ++ [n] ++ leaves der
 
-
-{-
-str EmptyT            =  
-str (NodeT n izq der) = 
-
--}
-
+leavesInvertido :: Tree a -> [a]
+leavesInvertido EmptyT = []
+leavesInvertido (NodeT n izq der) = leavesInvertido der ++ leavesInvertido izq ++ [n] 
 
 --1.k)
 levelN :: Int -> Tree a -> [a]
@@ -234,26 +231,14 @@ ramaMasLarga (NodeT n izq der)  = if length (ramaMasLarga izq )  > length  (rama
 todosLosCaminos :: Tree a -> [[a]]
 -- Dado un árbol devuelve todos los caminos, es decir, los caminos desde la raíz hasta cualquiera de los nodos.
 todosLosCaminos EmptyT            = []
-todosLosCaminos (NodeT n izq der) = [n] : (subtarea [n] izq  ++  subtarea [n] der)   
+todosLosCaminos (NodeT n izq der) = [n] : (caminos [n] izq  ++  caminos [n] der)   
 
+caminos :: [a] -> Tree a -> [[a]]
+caminos ns  EmptyT            = []
+caminos ns (NodeT x izq der) =  (ns ++ [x]) : (caminos (ns ++ [x])  izq  ++ caminos (ns ++ [x])  der)   
 
--- agregarSiempre :: a -> [[a]] -> [[a]]
--- agregarSiempre 
-
-
-subtarea :: [a] -> Tree a -> [[a]]
-subtarea n  EmptyT            = []
-subtarea n (NodeT x izq der) =  (n ++ [x])  : (subtarea (n ++ [x])  izq  ++ subtarea (n ++ [x])  der)   
-
--- [[1,2],[2,3],[3,100],[1,4],[4,5]]
-
-caminos :: Tree Int 
-caminos = (NodeT 1 (NodeT 2 (NodeT 3 (NodeT 8 EmptyT EmptyT) EmptyT) EmptyT) (NodeT 4 (NodeT 5 EmptyT EmptyT) EmptyT))
-
--- [[1],[2],[1],[4]]
--- [[1,2],[2,3],[1,4],[4,5]]
--- [[1],[1,2],[2],[2,3],[1],[1,4],[4],[4,5]]
--- [[1],[1,2],[2,3],[1,4],[4,5]]
+caminoss :: Tree Int 
+caminoss = (NodeT 1 (NodeT 2 (NodeT 3 (NodeT 8 EmptyT EmptyT) EmptyT) EmptyT) (NodeT 4 (NodeT 5 EmptyT EmptyT) EmptyT))
 
 
 -- todosLosCaminos          (NodeT 1 
@@ -261,7 +246,51 @@ caminos = (NodeT 1 (NodeT 2 (NodeT 3 (NodeT 8 EmptyT EmptyT) EmptyT) EmptyT) (No
                 --(NodeT 3 ...  EmptyT)   (NodeT 5 ... EmptyT
             -- EmptyT EmptyT)            EmptyT EmptyT) 
 
-                                
--- 
--- EmptyT))
--- = [ [1], [1,2], [1,2,3], [1,4], [1,4,5] ]
+-- 2.2) Expresiones Aritméticas
+-- El tipo algebraico ExpA modela expresiones aritméticas de la siguiente manera:
+data ExpA = Valor Int | Sum ExpA ExpA | Prod ExpA ExpA | Neg ExpA
+                    deriving Show
+
+
+-- 2.a) 
+eval :: ExpA -> Int
+-- Dada una expresión aritmética devuelve el resultado evaluarla.
+eval (Neg n)    = (eval n) * (- 1)
+eval (Sum n m)  = (eval n) + (eval m)   
+eval (Prod n m) = (eval n) * (eval m)
+eval (Valor n)  = n 
+
+n1 :: ExpA
+n1 = (Sum (Valor 10) (Valor 5)) 
+
+-- 2.b) 
+simplificar :: ExpA -> ExpA
+-- Dada una expresión aritmética, la simplica según los siguientes criterios (descritos utilizando
+-- notación matemática convencional): 
+simplificar (Sum n m)  = simplificarSuma n  m 
+simplificar (Prod n m) = simplificarProd n  m 
+simplificar (Neg n)    = simplificarNeg  n 
+
+simplificarProd :: ExpA -> ExpA -> ExpA
+simplificarProd n m = if (es0 n || es0 m) 
+                        then (Valor 0 ) 
+                        else (Prod n m) 
+
+simplificarSuma :: ExpA -> ExpA -> ExpA 
+simplificarSuma (Valor 0) m = m 
+simplificarSuma n (Valor 0) = n 
+simplificarSuma n    m      = (Sum n m)
+
+simplificarNeg :: ExpA -> ExpA 
+simplificarNeg n = if esNeg n then n else (Neg n) 
+
+esNeg :: ExpA -> Bool 
+esNeg (Valor n) = n != (n * (-1)) 
+                  
+es0 :: ExpA -> Bool 
+es0 (Valor n) = n == 0
+
+-- a) 0 + x = x + 0 = x
+-- b) 0 * x = x * 0 = 0
+-- c) 1 * x = x * 1 = x
+-- d) - (- x) = x       

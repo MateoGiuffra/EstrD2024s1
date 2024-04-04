@@ -62,20 +62,21 @@ lasDeLongitudMayorA :: Int -> [[a]] -> [[a]]
 lasDeLongitudMayorA n []       = []
 lasDeLongitudMayorA n (xs:xss) = if longitud xs > n 
                                     then xs : lasDeLongitudMayorA n xss 
-                                    else xs : lasDeLongitudMayorA n xss   
+                                    else lasDeLongitudMayorA n xss   
 --11. 
 agregarAlFinal :: [a] -> a -> [a]
 --Dados una lista y un elemento, devuelve una lista con ese elemento agregado al nal de la
 --lista.
 agregarAlFinal  []    a = [a]
 agregarAlFinal (x:xs) a = x : agregarAlFinal xs a  
+
 --12. 
 agregar :: [a] -> [a] -> [a]
 --Dadas dos listas devuelve la lista con todos los elementos de la primera lista y todos los
 --elementos de la segunda a continuación. Denida en Haskell como (++).
-agregar [] ys     = ys 
 agregar xs []     = xs
-agregar xs (y:ys) = y : agregar xs ys 
+agregar [] ys     = ys 
+agregar (x:xs) ys = x : agregar xs ys  
 
 --13. 
 reversa :: [a] -> [a]
@@ -111,15 +112,16 @@ elMinimo (x:xs) = if x < elMinimo xs
 factorial :: Int -> Int
 --Dado un número n se devuelve la multiplicación de este número y todos sus anteriores hasta
 --llegar a 0. Si n es 0 devuelve 1. La función es parcial si n es negativo.
--- PRECONDICION = El numero dado no puede ser negativo.
+-- PRECONDICION: El numero dado no puede ser negativo.
 factorial 0 = 1 
-factorial n = (n - 1) * factorial n  
+factorial n = n * factorial (n-1) 
+
 --2. 
 cuentaRegresiva :: Int -> [Int]
 --Dado un número n devuelve una lista cuyos elementos sean los números comprendidos entre
 --n y 1 (incluidos). Si el número es inferior a 1, devuelve la lista vacía.
-cuentaRegresiva 1 = []
-cuentaRegresiva n = n - 1 : cuentaRegresiva n 
+cuentaRegresiva 0 = []
+cuentaRegresiva n = n : cuentaRegresiva (n - 1)
 --3. 
 repetir :: Int -> a -> [a]
 --Dado un número n y un elemento e devuelve una lista en la que el elemento e repite n veces.
