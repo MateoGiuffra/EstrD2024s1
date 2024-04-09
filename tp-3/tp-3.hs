@@ -129,7 +129,7 @@ cantTesorosEntre n m (Cofre obs cm) = if n <= 0
 
 
 data Tree a = EmptyT | NodeT a (Tree a) (Tree a)
-
+                deriving Show
 arbol1 :: Tree Int 
 arbol1 =                (NodeT 1  
                             (NodeT 2 
@@ -228,20 +228,14 @@ ramaMasLarga (NodeT n izq der)  = if length (ramaMasLarga izq )  > length  (rama
 todosLosCaminos :: Tree a -> [[a]]
 -- Dado un árbol devuelve todos los caminos, es decir, los caminos desde la raíz hasta cualquiera de los nodos.
 todosLosCaminos EmptyT            = []
-todosLosCaminos (NodeT n izq der) = [n] : (caminos [n] izq  ++  caminos [n] der)   
+todosLosCaminos (NodeT n izq der) = [n] : (caminosPasados n (todosLosCaminos izq)) ++ (caminosPasados n (todosLosCaminos  der)) 
 
-caminos :: [a] -> Tree a -> [[a]]
-caminos ns  EmptyT            = []
-caminos ns (NodeT x izq der) =  (ns ++ [x]) : (caminos (ns ++ [x])  izq  ++ caminos (ns ++ [x])  der)   
+caminosPasados :: a -> [[a]] ->  [[a]]
+caminosPasados x []     = []  
+caminosPasados x (a:as) = (x : a) : (caminosPasados x as) 
 
-caminoss :: Tree Int 
+
 caminoss = (NodeT 1 (NodeT 2 (NodeT 3 (NodeT 8 EmptyT EmptyT) EmptyT) EmptyT) (NodeT 4 (NodeT 5 EmptyT EmptyT) EmptyT))
-
-
--- todosLosCaminos          (NodeT 1 
-                    -- (NodeT 2 ... (NodeT 4 
-                --(NodeT 3 ...  EmptyT)   (NodeT 5 ... EmptyT
-            -- EmptyT EmptyT)            EmptyT EmptyT) 
 
 -- 2.2) Expresiones Aritméticas
 -- El tipo algebraico ExpA modela expresiones aritméticas de la siguiente manera:
