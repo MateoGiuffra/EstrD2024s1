@@ -338,36 +338,134 @@ sinRepetidos (x:xs) = if pertenece x xs
 -- Las crías poseen sólo un nombre y no poseen lobos a cargo.
 -- La estructura es la siguiente:
 
-type Presa = String -- nombre de presa
-type Territorio = String -- nombre de territorio
-type Nombre = String -- nombre de lobo
-data Lobo =   Cazador Nombre [Presa] Lobo Lobo Lobo
-            | Explorador Nombre [Territorio] Lobo Lobo
-            | Cría Nombre
+type Presa      = String
+type Territorio = String
+type Nombre     = String
+
+data Lobo   = Cazador Nombre [Presa] Lobo Lobo Lobo | Explorador Nombre [Territorio] Lobo Lobo | Cria Nombre
 data Manada = M Lobo
--- 1. Construir un valor de tipo Manada que posea 1 cazador, 2 exploradores y que el resto sean
+-- 1. Construir un valor de tipo Manada que posea 1 cazador, 2 exploradores y que el resto sean crias
+-- (Cazador "h" presas  (Explorador "e1" [] (cr1) (cr2)) exp2 (cr5))
+
+
+lobo   = (Cazador "h" presas  exp1 exp2 exp3)
+manada = M lobo 
+
+
+exp1 = (Explorador "e1" ninguno (cr1) (cr2))
+exp2 = (Explorador "e2" algunos (cr3) (cr4))
+exp3 = (Explorador "e3" todos   (cr3) (cr4))
+
+ninguno = []
+algunos = ["Selva-Norte", "Selva-Sur"]
+todos   = ["Selva-Norte", "Selva-Sur","Selva-Oeste","Selva-Este"]
+
+presas   = ["p1","p2","p3","p4","p5","p6"]
+nopresas = []
+
+cr1 = Cria "c1"
+cr2 = Cria "c2"
+cr3 = Cria "c3"
+cr4 = Cria "c4"
+cr5 = Cria "c5"
+
+
 -- crías. Resolver las siguientes funciones utilizando recursión estructural sobre la estructura
 -- que corresponda en cada caso:
+
+{-
+f (Cria n)                 =
+f (Explorador n ts l1 l2 ) = 
+f (Cazador n ps l1 l2 l3 ) = 
+-}
 
 --2) 
 buenaCaza :: Manada -> Bool
 -- Propósito: dada una manada, indica si la cantidad de alimento cazado es mayor a la cantidad de crías.
+buenaCaza (M lobo) = cantCrias lobo < cantPresas lobo 
+
+cantCrias :: Lobo -> Int 
+cantCrias (Cria _)                 = 1
+cantCrias (Explorador n ts l1 l2 ) = cantCrias l1 + cantCrias l2 
+cantCrias (Cazador n ps l1 l2 l3 ) = cantCrias l1 + cantCrias l2 + cantCrias l3
+
+cantPresas :: Lobo -> Int 
+cantPresas (Cria _)                 = 0 
+cantPresas (Explorador _ _ l1 l2 )  = cantPresas l1 + cantPresas l2
+cantPresas (Cazador _ ps l1 l2 l3 ) = length ps + cantPresas l1 + cantPresas l2 + cantPresas l3 
+
 --3. 
 elAlfa :: Manada -> (Nombre, Int)
 --Propósito: dada una manada, devuelve el nombre del lobo con más presas cazadas, junto
 --con su cantidad de presas. Nota: se considera que los exploradores y crías tienen cero presas
 --cazadas, y que podrían formar parte del resultado si es que no existen cazadores con más de
 --cero presas.
+elAlfa (M lobo) = elLoboAlfa lobo
+
+elLoboAlfa :: Lobo -> (Nombre, Int)
+elLoboAlfa (Cria n)                 = (n,0)
+elLoboAlfa (Explorador n ts l1 l2 ) = (n,0)
+elLoboAlfa (Cazador n ps l1 l2 l3 ) = let loboAlfa   = elAlfaEntre (elLoboAlfa l1) (elLoboAlfa l2) (elLoboAlfa l3) in  
+                                      let cantPresas = length ps in 
+                                        if cantPresas > snd loboAlfa  
+                                            then (n,cantPresas)
+                                            else loboAlfa
+
+elAlfaEntre ::  (Nombre, Int) ->  (Nombre, Int) ->  (Nombre, Int) -> (Nombre, Int)
+-- PROPOSITO: Dada 3 tuplas, con el nombre de un lobo y su cantidad de presas, devuelve aquel que tenga el mayor numero de presas. 
+elAlfaEntre t1 t2 t3 = elMayor t1 (elMayor t2 t3)
+
+elMayor ::   (Nombre, Int) ->  (Nombre, Int) ->  (Nombre, Int)
+-- PROPOSITO: Dado dos tuplas de tipo (Nombre, Int) devuelve aquella con el Int mayor. 
+elMayor (n1,i1) (n2,i2) = if i1 > i2 
+                            then (n1,i1) 
+                            else (n2,i2) 
+
 --4. 
 losQueExploraron :: Territorio -> Manada -> [Nombre]
---Propósito: dado un territorio y una manada, devuelve los nombres de los exploradores que
---pasaron por dicho territorio.
+--Propósito: dado un territorio y una manada, devuelve los nombres de los exploradores que pasaron por dicho territorio.
+losQueExploraron t (M lobo) = lobosQueExploraron t lobo 
+
+lobosQueExploraron :: Territorio -> Lobo -> [Nombre]
+lobosQueExploraron t (Cria _)                 = []
+lobosQueExploraron t (Cazador n _ l1 l2 l3 ) = lobosQueExploraron t l1 ++ lobosQueExploraron t l2 ++ lobosQueExploraron t l3
+lobosQueExploraron t (Explorador n ts l1 l2 ) = if pertenece t ts 
+                                                then n : (lobosQueExploraron t l1 ++ lobosQueExploraron t l2)
+                                                else lobosQueExploraron t l1 ++ lobosQueExploraron t l2  
+
+
 --5. 
 exploradoresPorTerritorio :: Manada -> [(Territorio, [Nombre])]
---Propósito: dada una manada, denota la lista de los pares cuyo primer elemento es un territorio y cuyo segundo elemento es la lista de los nombres de los exploradores que exploraron
---dicho territorio. Los territorios no deben repetirse.
+-- Propósito: dada una manada, denota la lista de los pares cuyo primer elemento es un territorio y cuyo segundo elemento es la lista de 
+-- los nombres de los exploradores que exploraron
+-- dicho territorio. Los territorios no deben repetirse.
+exploradoresPorTerritorio (M lobo) = exploradoresDe (territoriosRecorridos lobo) (M lobo) 
+
+exploradoresDe :: [Territorio] -> Manada -> [(Territorio, [Nombre])]  
+exploradoresDe []     manada = [] 
+exploradoresDe (t:ts) manada = (t, losQueExploraron t manada) : exploradoresDe ts manada
+
+territoriosDe :: Lobo -> [Territorio]
+-- PROPOSITO: Devuelve una lista de Territorios que han sido recorridos. 
+territoriosDe (Cria n)                 = []
+territoriosDe (Explorador n ts l1 l2 ) = ts ++ territoriosDe l1 ++ territoriosDe l2 
+territoriosDe (Cazador n ps l1 l2 l3 ) = territoriosDe l1 ++ territoriosDe l2 ++ territoriosDe l3
+
+territoriosRecorridos :: Lobo -> [Territorio] 
+-- PROPOSITO: Dada una lista de territorios, te devuelve los mismos sin repetidos. 
+territoriosRecorridos l = sinRepetidos (territoriosDe l)
+
+
+
 --6. 
-superioresDelCazador :: Nombre -> Manada -> [Nombre]
---Propósito: dado un nombre de cazador y una manada, indica el nombre de todos los
---cazadores que tienen como subordinado al cazador dado (directa o indirectamente).
---Precondición: hay un cazador con dicho nombre y es único.
+
+-- superioresDelCazador :: Nombre -> Manada -> [Nombre]
+-- --Propósito: dado un nombre de cazador y una manada, indica el nombre de todos los
+-- --cazadores que tienen como subordinado al cazador dado (directa o indirectamente).
+-- --Precondición: hay un cazador con dicho nombre y es único.
+
+
+-- lobosExploradoresPorTerritorio :: Lobo -> Manada -> [(Territorio, [Nombre])]
+-- lobosExploradoresPorTerritorio (Cria n)                 = []
+-- lobosExploradoresPorTerritorio (Explorador n ts l1 l2 ) = g ts l1 ++ g ts l2   
+-- lobosExploradoresPorTerritorio (Cazador n ps l1 l2 l3 ) = g ts l1 ++ g ts l2 ++ g ts l3 
