@@ -40,10 +40,8 @@ sacar c (Bolita cl cd) = if (sonMismoColor c cl)
 --1.d)
 ponerN :: Int -> Color -> Celda -> Celda
 --Dado un número n, un color c, y una celda, agrega n bolitas de color c a la celda.
-ponerN 0 c celda           = celda 
-ponerN n c CeldaVacia      = (Bolita c  (ponerN  (n-1) c CeldaVacia)) 
-ponerN n c (Bolita cl cd ) = (Bolita cl (ponerN   (n) c cd)) 
-
+ponerN 0 c cd = cd 
+ponerN n c cd = Bolita c (ponerN (n-1) c cd)
 
 --1.2. Camino hacia el tesoro
 
@@ -51,13 +49,13 @@ data Objeto = Cacharro | Tesoro
             deriving Show
 data Camino = Fin | Cofre [Objeto] Camino | Nada Camino
             deriving Show
-camino1 = Cofre [] (Cofre [] (Nada (Cofre [Tesoro] Fin)))
+
 -- aca se recorren 3 pasos o 2 ? 
 
 {-
-str Fin            =   
-str (Nada  cm)     = 
-str (Cofre obs cm) =
+f Fin            =   
+f (Nada  cm)     = 
+f (Cofre obs cm) =
 -}
 
 
@@ -87,15 +85,22 @@ pasosHastaTesoro (Cofre obs cm) = if (hayUnTesoro obs)
                                     then pasosHastaTesoro Fin 
                                     else 1 + pasosHastaTesoro cm 
 
-
+camino1 = Cofre [] (Cofre [] (Nada (Cofre [Tesoro] Fin)))
+camino2 = Cofre [] (Cofre [Tesoro] (Nada (Cofre [Tesoro] Fin)))
 
 --2.c)
 hayTesoroEn :: Int -> Camino -> Bool
 --Indica si hay un tesoro en una cierta cantidad exacta de pasos. Por ejemplo, si el número de
 --pasos es 5, indica si hay un tesoro en 5 pasos.
 -- PRECONDCION: El numero tiene que ser igual o mayor a 0. 
-hayTesoroEn n cm = pasosHastaTesoro cm == n 
+hayTesoroEn 0 camino         = hayTesoroAca camino
+hayTesoroEn n Fin            = False 
+hayTesoroEn n (Nada  cm)     = hayTesoroEn (n-1) cm
+hayTesoroEn n (Cofre obs cm) = hayTesoroEn (n-1) cm 
 
+hayTesoroAca :: Camino -> Bool 
+hayTesoroAca (Cofre obs cm) = hayUnTesoro obs 
+hayTesoroAca _              = False 
 
 --2.d)
 alMenosNTesoros :: Int -> Camino -> Bool
@@ -166,15 +171,21 @@ perteneceT a (NodeT n izq der) = n == a || perteneceT a izq || perteneceT a der
 --1.e)
 aparicionesT :: Eq a => a -> Tree a -> Int
 --Dados un elemento e y un árbol binario devuelve la cantidad de elementos del árbol que son iguales a e.
-aparicionesT _ EmptyT             = 0 
-aparicioensT e (NodeT n izq der ) = unoSi (e == n) + aparicionesT e izq + aparicionesT e der 
+aparicionesT e EmptyT             = 0 
+aparicionesT e (NodeT n izq der ) = unoSi (e == n) + (aparicionesT e izq) + (aparicionesT e der) 
+
 
 --1.f)
 leaves :: Tree a -> [a]
 -- Dado un árbol devuelve los elementos que se encuentran en sus hojas.
 leaves EmptyT            = []
-leaves (NodeT n izq der) = n : (leaves izq ++ leaves der) 
+leaves (NodeT n izq der) =  if isEmptyT izq && isEmptyT der 
+                              then n : (leaves izq ++ leaves der)
+                              else leaves izq ++ leaves der 
 
+isEmptyT :: Tree a -> Bool 
+isEmptyT EmptyT = True 
+isEmptyT _      = False 
 --1.g) 
 heightT :: Tree a -> Int
 --Dado un árbol devuelve su altura.
@@ -207,14 +218,25 @@ levelN :: Int -> Tree a -> [a]
 -- distancia de la raiz a uno de sus hijos es 1.
 -- Nota: El primer nivel de un árbol (su raíz) es 0.
 levelN _ EmptyT             = []
-levelN 0 (NodeT x _ _)      = [x] 
-levelN n (NodeT x izq der ) = x : levelN (n-1) izq ++  levelN (n-1) der  
-
---1.l)
+levelN 0 (NodeT x izq der ) = x : (levelN (-1) izq ++ levelN (-1) der ) 
+levelN n (NodeT x izq der ) = if n < 0  
+                                 then [] 
+                                 else (levelN (n-1) izq ++ levelN (n-1) der )  
+--1.l)                                  
 listPerLevel :: Tree a -> [[a]]
 -- Dado un árbol devuelve una lista de listas en la que cada elemento representa un nivel de dicho árbol.
-listPerLevel EmptyT             = [[]]
-listPerLevel (NodeT n izq der)  = [n] : listPerLevel izq ++ listPerLevel der   
+listPerLevel EmptyT             = []
+listPerLevel (NodeT n izq der)  = [n] : unirPorMismaPosicion (listPerLevel izq ) (listPerLevel der)   
+
+unirPorMismaPosicion :: [[a]] -> [[a]] -> [[a]]
+unirPorMismaPosicion  []     ys     = ys 
+unirPorMismaPosicion  xs []         = xs
+unirPorMismaPosicion  (x:xs) (y:ys) = (x++y) : unirPorMismaPosicion xs ys 
+
+
+--  resultado: [[1],[2,5],[3,4,6,7]]
+
+tree = NodeT 1 (NodeT 2 (NodeT 3 EmptyT EmptyT)(NodeT 4 EmptyT EmptyT)) (NodeT 5 (NodeT 6 EmptyT EmptyT)(NodeT 7 EmptyT EmptyT))
 
 --1.ñ)
 ramaMasLarga :: Tree a -> [a]
@@ -267,9 +289,9 @@ simplificar  n         = n
 simplificarProd :: ExpA -> ExpA -> ExpA
 simplificarProd (Valor 1) m = m
 simplificarProd n (Valor 1) = n
-simplificarProd n m =  if (es0 n || es0 m) 
-                         then (Valor 0 ) 
-                         else (Prod n m) 
+simplificarProd (Valor 0) m = (Valor 0)
+simplificarProd n (Valor 0) = (Valor 0)
+simplificarProd n m         =  (Prod n m) 
 
 simplificarSuma :: ExpA -> ExpA -> ExpA 
 simplificarSuma (Valor 0) m = m 
@@ -280,9 +302,7 @@ simplificarNeg :: ExpA -> ExpA
 simplificarNeg (Neg e) = e 
 simplificarNeg e       = (Neg e)
                   
-es0 :: ExpA -> Bool 
-es0 _         = False 
-es0 (Valor n) = n == 0
+
 
 -- a) 0 + x = x + 0 = x
 -- b) 0 * x = x * 0 = 0
