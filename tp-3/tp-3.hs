@@ -228,11 +228,11 @@ ramaMasLarga (NodeT n izq der)  = if length (ramaMasLarga izq )  > length  (rama
 todosLosCaminos :: Tree a -> [[a]]
 -- Dado un árbol devuelve todos los caminos, es decir, los caminos desde la raíz hasta cualquiera de los nodos.
 todosLosCaminos EmptyT            = []
-todosLosCaminos (NodeT n izq der) = [n] : (caminosPasados n (todosLosCaminos izq)) ++ (caminosPasados n (todosLosCaminos  der)) 
+todosLosCaminos (NodeT n izq der) = [n] : (caminosPasados n (todosLosCaminos izq)) ++ (caminosPasados n (todosLosCaminos der)) 
 
 caminosPasados :: a -> [[a]] ->  [[a]]
-caminosPasados x []     = []  
-caminosPasados x (a:as) = (x : a) : (caminosPasados x as) 
+caminosPasados n []     = []  
+caminosPasados n (as:ass) = (n : as) : (caminosPasados n ass) 
 
 
 caminoss = (NodeT 1 (NodeT 2 (NodeT 3 (NodeT 8 EmptyT EmptyT) EmptyT) EmptyT) (NodeT 4 (NodeT 5 EmptyT EmptyT) EmptyT))
