@@ -237,6 +237,7 @@ caminosPasados n (as:ass) = (n : as) : (caminosPasados n ass)
 
 caminoss = (NodeT 1 (NodeT 2 (NodeT 3 (NodeT 8 EmptyT EmptyT) EmptyT) EmptyT) (NodeT 4 (NodeT 5 EmptyT EmptyT) EmptyT))
 
+
 -- 2.2) Expresiones Aritméticas
 -- El tipo algebraico ExpA modela expresiones aritméticas de la siguiente manera:
 data ExpA = Valor Int | Sum ExpA ExpA | Prod ExpA ExpA | Neg ExpA
