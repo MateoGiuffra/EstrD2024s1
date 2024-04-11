@@ -348,13 +348,15 @@ data Manada = M Lobo
 -- (Cazador "h" presas  (Explorador "e1" [] (cr1) (cr2)) exp2 (cr5))
 
 
-lobo   = (Cazador "h" presas  exp1 exp2 exp3)
+lobo   = (Cazador "h" presas exp1 exp2 exp3)
 manada = M lobo 
 
 
-exp1 = (Explorador "e1" ninguno (cr1) (cr2))
-exp2 = (Explorador "e2" algunos (cr3) (cr4))
-exp3 = (Explorador "e3" todos   (cr3) (cr4))
+exp1 = (Explorador "e1" ninguno (exp4) (cr2))
+exp2 = (Explorador "e2" algunos (cr1) (cr2))
+exp3 = (Explorador "e3" todos   (exp4) (cr4))
+exp4 = (Explorador "e4" todos   (cr3) (cr4))
+
 
 ninguno = []
 algunos = ["Selva-Norte", "Selva-Sur"]
@@ -368,7 +370,6 @@ cr2 = Cria "c2"
 cr3 = Cria "c3"
 cr4 = Cria "c4"
 cr5 = Cria "c5"
-
 
 -- crías. Resolver las siguientes funciones utilizando recursión estructural sobre la estructura
 -- que corresponda en cada caso:
@@ -440,6 +441,7 @@ exploradoresPorTerritorio :: Manada -> [(Territorio, [Nombre])]
 -- los nombres de los exploradores que exploraron
 -- dicho territorio. Los territorios no deben repetirse.
 exploradoresPorTerritorio (M lobo) = exploradoresDe (territoriosRecorridos lobo) (M lobo) 
+                                            -- esta bien usar el constructor aca? |||||| Me da la ventaja de ahorrarme una subtarea
 
 exploradoresDe :: [Territorio] -> Manada -> [(Territorio, [Nombre])]  
 exploradoresDe []     manada = [] 
@@ -455,17 +457,19 @@ territoriosRecorridos :: Lobo -> [Territorio]
 -- PROPOSITO: Dada una lista de territorios, te devuelve los mismos sin repetidos. 
 territoriosRecorridos l = sinRepetidos (territoriosDe l)
 
-
-
 --6. 
+superioresDelCazador :: Nombre -> Manada -> [Nombre]
+--Propósito: dado un nombre de cazador y una manada, indica el nombre de todos los
+--cazadores que tienen como subordinado al cazador dado (directa o indirectamente).
+--Precondición: hay un cazador con dicho nombre y es único.
+superioresDelCazador n (M lobo) = lobosSuperioresDelCazador n lobo
 
--- superioresDelCazador :: Nombre -> Manada -> [Nombre]
--- --Propósito: dado un nombre de cazador y una manada, indica el nombre de todos los
--- --cazadores que tienen como subordinado al cazador dado (directa o indirectamente).
--- --Precondición: hay un cazador con dicho nombre y es único.
-
-
--- lobosExploradoresPorTerritorio :: Lobo -> Manada -> [(Territorio, [Nombre])]
--- lobosExploradoresPorTerritorio (Cria n)                 = []
--- lobosExploradoresPorTerritorio (Explorador n ts l1 l2 ) = g ts l1 ++ g ts l2   
--- lobosExploradoresPorTerritorio (Cazador n ps l1 l2 l3 ) = g ts l1 ++ g ts l2 ++ g ts l3 
+lobosSuperioresDelCazador :: Nombre -> Lobo -> [Nombre]
+lobosSuperioresDelCazador n' (Cria n)                 = []
+lobosSuperioresDelCazador n' (Explorador n ts l1 l2 ) = if n == n' 
+                                                        then []
+                                                        else n : (lobosSuperioresDelCazador n' l1 ++ lobosSuperioresDelCazador n' l2)
+lobosSuperioresDelCazador n' (Cazador n ps l1 l2 l3 ) = if n == n' 
+                                                        then []
+                                                        else n : (lobosSuperioresDelCazador n' l1 ++ lobosSuperioresDelCazador n' l2 ++ lobosSuperioresDelCazador n' l3)
+                                                        
