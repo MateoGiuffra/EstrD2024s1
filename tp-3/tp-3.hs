@@ -79,11 +79,11 @@ pasosHastaTesoro :: Camino -> Int
 --Indica la cantidad de pasos que hay que recorrer hasta llegar al primer cofre con un tesoro.
 --Si un cofre con un tesoro está al principio del camino, la cantidad de pasos a recorrer es 0.
 --Precondición: tiene que haber al menos un tesoro.
-pasosHastaTesoro Fin            = 0  
+pasosHastaTesoro Fin            = error "no hay tesoro"  
 pasosHastaTesoro (Nada  cm)     = 1 + pasosHastaTesoro cm 
-pasosHastaTesoro (Cofre obs cm) = if (hayUnTesoro obs) 
-                                    then pasosHastaTesoro Fin 
-                                    else 1 + pasosHastaTesoro cm 
+pasosHastaTesoro (Cofre obs cm) = if hayUnTesoro obs 
+                                   then 0 
+                                   else 1 + pasosHastaTesoro cm 
 
 camino1 = Cofre [] (Cofre [] (Nada (Cofre [Tesoro] Fin)))
 camino2 = Cofre [] (Cofre [Tesoro] (Nada (Cofre [Tesoro] Fin)))
@@ -281,17 +281,17 @@ n1 = (Sum (Valor 10) (Valor 5))
 simplificar :: ExpA -> ExpA
 -- Dada una expresión aritmética, la simplica según los siguientes criterios (descritos utilizando
 -- notación matemática convencional): 
-simplificar (Sum n m)  = simplificarSuma n  m 
-simplificar (Prod n m) = simplificarProd n  m 
-simplificar (Neg n)    = simplificarNeg  n 
-simplificar  n         = n 
+simplificar (Sum n m)  = simplificarSuma (simplificar n) (simplificar m) 
+simplificar (Prod n m) = simplificarProd (simplificar n) (simplificar m) 
+simplificar (Neg n)    = simplificarNeg  (simplificar n) 
+simplificar (Valor n)  = (Valor n) 
 
 simplificarProd :: ExpA -> ExpA -> ExpA
 simplificarProd (Valor 1) m = m
 simplificarProd n (Valor 1) = n
-simplificarProd (Valor 0) m = (Valor 0)
-simplificarProd n (Valor 0) = (Valor 0)
-simplificarProd n m         =  (Prod n m) 
+simplificarProd (Valor 0) _ = Valor 0
+simplificarProd _ (Valor 0) = Valor 0
+simplificarProd n m         = Prod n m 
 
 simplificarSuma :: ExpA -> ExpA -> ExpA 
 simplificarSuma (Valor 0) m = m 

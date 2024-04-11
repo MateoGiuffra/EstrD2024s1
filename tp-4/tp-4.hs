@@ -406,7 +406,7 @@ elAlfa (M lobo) = elLoboAlfa lobo
 elLoboAlfa :: Lobo -> (Nombre, Int)
 elLoboAlfa (Cria n)                 = (n,0)
 elLoboAlfa (Explorador n ts l1 l2 ) = (n,0)
-elLoboAlfa (Cazador n ps l1 l2 l3 ) = let loboAlfa   = elAlfaEntre (elLoboAlfa l1) (elLoboAlfa l2) (elLoboAlfa l3) in  
+elLoboAlfa (Cazador n ps l1 l2 l3 ) = let loboAlfa   = elAlfaEntre (elLoboAlfa l1) (elLoboAlfa l2) (elLoboAlfa l3) in 
                                       let cantPresas = length ps in 
                                         if cantPresas > snd loboAlfa  
                                             then (n,cantPresas)
