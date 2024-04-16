@@ -343,6 +343,7 @@ type Territorio = String
 type Nombre     = String
 
 data Lobo   = Cazador Nombre [Presa] Lobo Lobo Lobo | Explorador Nombre [Territorio] Lobo Lobo | Cria Nombre
+                deriving Show
 data Manada = M Lobo
 -- 1. Construir un valor de tipo Manada que posea 1 cazador, 2 exploradores y que el resto sean crias
 -- (Cazador "h" presas  (Explorador "e1" [] (cr1) (cr2)) exp2 (cr5))
@@ -350,17 +351,21 @@ data Manada = M Lobo
 
 lobo   = (Cazador "h" presas exp1 exp2 exp3)
 manada = M lobo 
+-- [("Selva-Norte",["e2","e3"]) ("Selva-Sur",["e2","e3"]) ("Selva-Oeste",["e3"]) ("Selva-Este" , ["e3"])]
 
-
-exp1 = (Explorador "e1" ninguno (exp4) (cr2))
+exp1 = (Explorador "e1" ninguno (cr2) (cr2))
 exp2 = (Explorador "e2" algunos (cr1) (cr2))
-exp3 = (Explorador "e3" todos   (exp4) (cr4))
+exp3 = (Explorador "e3" todos   (cr2) (cr4))
+
+
 exp4 = (Explorador "e4" todos   (cr3) (cr4))
 
 
 ninguno = []
 algunos = ["Selva-Norte", "Selva-Sur"]
 todos   = ["Selva-Norte", "Selva-Sur","Selva-Oeste","Selva-Este"]
+
+
 
 presas   = ["p1","p2","p3","p4","p5","p6"]
 nopresas = []
@@ -435,28 +440,6 @@ lobosQueExploraron t (Explorador n ts l1 l2 ) = if pertenece t ts
                                                 else lobosQueExploraron t l1 ++ lobosQueExploraron t l2  
 
 
---5. 
-exploradoresPorTerritorio :: Manada -> [(Territorio, [Nombre])]
--- Propósito: dada una manada, denota la lista de los pares cuyo primer elemento es un territorio y cuyo segundo elemento es la lista de 
--- los nombres de los exploradores que exploraron
--- dicho territorio. Los territorios no deben repetirse.
-exploradoresPorTerritorio (M lobo) = exploradoresDe (territoriosRecorridos lobo) (M lobo) 
-                                            -- esta bien usar el constructor aca? |||||| Me da la ventaja de ahorrarme una subtarea
-
-exploradoresDe :: [Territorio] -> Manada -> [(Territorio, [Nombre])]  
-exploradoresDe []     manada = [] 
-exploradoresDe (t:ts) manada = (t, losQueExploraron t manada) : exploradoresDe ts manada
-
-territoriosDe :: Lobo -> [Territorio]
--- PROPOSITO: Devuelve una lista de Territorios que han sido recorridos. 
-territoriosDe (Cria n)                 = []
-territoriosDe (Explorador n ts l1 l2 ) = ts ++ territoriosDe l1 ++ territoriosDe l2 
-territoriosDe (Cazador n ps l1 l2 l3 ) = territoriosDe l1 ++ territoriosDe l2 ++ territoriosDe l3
-
-territoriosRecorridos :: Lobo -> [Territorio] 
--- PROPOSITO: Dada una lista de territorios, te devuelve los mismos sin repetidos. 
-territoriosRecorridos l = sinRepetidos (territoriosDe l)
-
 --6. 
 superioresDelCazador :: Nombre -> Manada -> [Nombre]
 --Propósito: dado un nombre de cazador y una manada, indica el nombre de todos los
@@ -473,3 +456,38 @@ lobosSuperioresDelCazador n' (Cazador n ps l1 l2 l3 ) = if n == n'
                                                         then []
                                                         else n : (lobosSuperioresDelCazador n' l1 ++ lobosSuperioresDelCazador n' l2 ++ lobosSuperioresDelCazador n' l3)
                                                         
+
+
+--5. 
+exploradoresPorTerritorio :: Manada -> [(Territorio, [Nombre])]
+-- Propósito: dada una manada, denota la lista de los pares cuyo primer elemento es un territorio y cuyo segundo elemento es la lista de 
+-- los nombres de los exploradores que exploraron dicho territorio. Los territorios no deben repetirse.
+exploradoresPorTerritorio (M lobo) = lobosExploradoresPorTerritorio lobo 
+
+
+lobosExploradoresPorTerritorio :: Lobo -> [(Territorio, [Nombre])]
+lobosExploradoresPorTerritorio (Cria n)                 = []
+lobosExploradoresPorTerritorio (Explorador n ts l1 l2 ) = agregarExplorador n ts (combinarResultados (lobosExploradoresPorTerritorio l1) (lobosExploradoresPorTerritorio l2))
+lobosExploradoresPorTerritorio (Cazador n ps l1 l2 l3 ) = combinarResultados (combinarResultados (lobosExploradoresPorTerritorio l1) (lobosExploradoresPorTerritorio l2)) (lobosExploradoresPorTerritorio l3)
+
+agregarExplorador :: Nombre -> [Territorio] -> [(Territorio, [Nombre])]-> [(Territorio, [Nombre])]
+agregarExplorador n []     tns = []
+agregarExplorador n (t:ts) tns = (t,[n]) : agregarExplorador n ts tns 
+
+combinarResultados ::  [(Territorio, [Nombre])] ->  [(Territorio, [Nombre])] ->  [(Territorio, [Nombre])]
+combinarResultados  []           tns2  = tns2
+combinarResultados (tn:tns)  tns2  = let (t,ns) = tn in
+                                        agregarNombresATerritorio t ns (combinarResultados tns tns2)
+
+agregarNombresATerritorio :: Territorio -> [Nombre] -> [(Territorio, [Nombre])] ->  [(Territorio, [Nombre])]
+agregarNombresATerritorio t ns [] = [(t,ns)] 
+agregarNombresATerritorio t ns ((t2,ns2):tns) = if t == t2 
+                                                    then (t,(combinarNombres ns ns2)) : tns 
+                                                    else (t2, ns2) : (agregarNombresATerritorio t ns tns) 
+
+combinarNombres :: [Nombre] -> [Nombre] -> [Nombre]
+combinarNombres xs     [] = xs
+combinarNombres []     ys = ys
+combinarNombres (x:xs) ys = if pertenece x ys
+                                then combinarNombres xs ys 
+                                else x : (combinarNombres xs ys) 
