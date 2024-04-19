@@ -43,9 +43,10 @@ pertenece n (x:xs) = n == x || pertenece n xs
 
 -- O(n # siendo n la longitud de la lista ya que se hace RE sobre la misma.
 -- *
--- ( m # por el pertenece de la lista
+-- ( n #  siendo n la longitud de la lista ya que se hace elem del mismo costo. 
 -- ))
--- O(n*m)
+-- O(n*n)
+-- O(n^2)
 sinRepetidos :: Eq a => [a] -> [a]
 sinRepetidos [] = []
 sinRepetidos (x:xs) = if elem x xs
