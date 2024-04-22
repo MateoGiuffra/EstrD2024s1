@@ -18,11 +18,17 @@ module QueueV3
         dequeue)
         where 
 
-data Queue a = Q [a] [a] 
-
+data Queue a = Q (Maybe a) [a] 
+                -- firstQ  
 
 dobleCola = enqueue 1 (enqueue 2 (enqueue 3 (enqueue 4 (enqueue 5 emptyQ ) )))
--- consultar bien como funciona cola con dos listas 
+-- consultar bien como funciona cola con dos listas
+
+-- Q [5] [4,3,2,1]
+-- Q  Just 5 [4,3,2,1]
+
+-- Q Nothing [4,3,2,1] 
+-- Q Just 4 [3,2,1]
 
 emptyQ :: Queue a
 -- Crea una cola vacía.
@@ -34,13 +40,24 @@ isEmptyQ (Q fs bs) = null fs
 
 enqueue :: a -> Queue a -> Queue a
 -- Dados un elemento y una cola, agrega ese elemento a la cola.
-enqueue e (Q fs bs) = Q (fs ++ [e]) (bs ++ [e])
+enqueue e (Q fs bs) = if null fs 
+                        then Q (e:fs) bs 
+                        else Q fs (e:bs) 
 
 firstQ :: Queue a -> a
 -- Dada una cola devuelve el primer elemento de la cola.
-firstQ (Q (f:fs) bs) = f  
+firstQ (Q fs bs) = if null fs 
+                      then buscarPrimero bs 
+                      else primero fs   
+
 
 dequeue :: Queue a -> Queue a
 -- Dada una cola la devuelve sin su primer elemento.
-dequeue (Q (f:fs) bs) = (Q fs bs) 
+dequeue (Q fs bs) = if null fs 
+                       then Q ((buscarPrimero bs):fs) (sinPrimero bs) 
+                       else Q  
+
+-- Q  [] [4,3,2,1]
+
+
 
