@@ -36,7 +36,7 @@ enqueue :: a -> Queue a -> Queue a
 -- Dados un elemento y una cola, agrega ese elemento a la cola.
 enqueue e (Q fs bs) = if null fs 
                         then (Q (e:fs) bs) 
-                        else (Q fs (e:bs)) 
+                        else (Q fs (bs++[e])) 
 
 firstQ :: Queue a -> a
 -- Dada una cola devuelve el primer elemento de la cola.
@@ -50,11 +50,7 @@ dequeue (Q fs bs) = if null fs
                        then Q  bs []
                        else Q (tail fs) bs 
 
-dequeue :: Queue a -> Queue a
-dequeue (Q fs bs) =
-    if null (tail fs)
-     then Q (reverse bs) []
-     else Q (tail fs) bs
+
 
 -- Q  [] [4,3,2,1]
 
