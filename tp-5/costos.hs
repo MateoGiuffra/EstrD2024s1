@@ -143,3 +143,7 @@ orderar xs = let m = minimo xs in m : ordenar (sacar m xs)
                                                                                                          -- Nombre Edad
 
 -}
+
+borrar :: Eq a => a -> [a] -> [a]
+borrar _ [] = []
+borrar x (y:ys) = if x == y then ys else x : borrar x ys
