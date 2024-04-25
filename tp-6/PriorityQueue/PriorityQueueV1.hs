@@ -4,7 +4,8 @@
 -- Implementarla usando listas, e indicando el costo de cada operación.
 
 module PriorityQueueV1
-                    (emptyPQ,
+                    (PriorityQueue,
+                    emptyPQ,
                     isEmptyPQ,
                     insertPQ,
                     findMinPQ,
