@@ -2,7 +2,8 @@
 -- La interfaz del tip o abstracto Map es la siguiente:
 -- Como una lista de pares-clave valor con claves repetidas
 
-module MapV1(
+module MapV2(
+        Map,
         emptyM,
         assocM,
         lookupM,
