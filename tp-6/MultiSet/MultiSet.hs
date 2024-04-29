@@ -117,8 +117,8 @@ intersectionM :: (Eq a, Ord a) => [a] -> Map a Int -> Map a Int -> Map a Int
 -- n   # por ocurrencesM sobre map1 que es de la misma longitud que la lista de claves. -- Como se por inv rep que no hay elems repetidos, se que son el mismo numero
 --))
 -- O(n*(m+n+n))
--- O(n*(m+2n))
--- O(n*(m+n))
+-- O(n*(m+2n)) # porque se juntan las n multiplicadas por 2
+-- O(n*(m+n))  # porque se suprime 2n 
 intersectionM []     map1 map2 = emptyM 
 intersectionM (k:ks) map1 map2 = case lookupM k map2 of
                                     Nothing -> intersectionM ks map1 map2
