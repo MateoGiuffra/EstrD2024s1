@@ -50,3 +50,14 @@ INV.REP:
 -- Si son el mismo n cambiar a cuadratica. 
 -}
 
+{- MultiSet.hs
+
+-- LINEA 78: Consultar eficiencia, va m o n?
+
+-}
+{- PRIORITYQueueUser.hs
+
+LINEA 16: Consultar eficiencia
+
+-}
+
