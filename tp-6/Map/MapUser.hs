@@ -92,13 +92,14 @@ agruparEq :: Eq k => [(k, v)] -> Map k [v]
 -- EFICIENCIA: O(n*m)
 -- O(n # siendo n la longitud de la lista de pares ya que se hace RE sobre la misma
 -- *   # por cada (k,v) de kvs se hace:
--- (m  # por lookupM de k y la RE 
+-- (n  # por lookupM de k y la RE 
 -- +   # tambien se hace: 
--- m   # assocM de k y v sobre la RE
+-- n   # assocM de k y v sobre la RE
 -- ))
--- O(n*(m+m))
--- O(n*(2m))
--- O(n*m)
+-- O(n*(n+n))
+-- O(n*(2n))
+-- O(n*n)
+-- O(n^2) --CORREGIDO POR EL PROFE  
 agruparEq []            = emptyM
 agruparEq ((k,v):kvs)   = case lookupM k (agruparEq kvs) of 
                             Nothing  -> assocM k [v] (agruparEq kvs)
