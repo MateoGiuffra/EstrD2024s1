@@ -153,7 +153,7 @@ mergeMaps' (k:ks) map1 map2  = assocM k (justFrom (lookupM k map1)) (mergeMaps' 
 -- Ejercicio 5
 -- Implemente estas otras funciones como usuario de Map:
                      -- else assocM (last (claves) + 1) v (indexar vs) 
-
+-- Se puede usar con 0, pero intentar la otra opcion 
 indexar :: [a] -> Map Int a
 indexar []     = emptyM 
 indexar (v:vs) = assocConClaveAumentada v (indexar vs)
@@ -182,7 +182,8 @@ ocurrencias :: String -> Map Char Int
 -- O(n(n+m))
 ocurrencias []     = emptyM 
 ocurrencias (s:ss) = assocM s (cantDeApariciones s ss) (ocurrencias ss)
-
+                               -- hacer una funcion g que reciba un char, map char int y te devuelva un int ... Y usar un lookupM
+                                                                         -- la recursion seria el map
 cantDeApariciones ::  Char -> [Char] -> Int 
 -- PROPOSITO: Dado un Caracter y una lista de Caracteres, devuelve la cantidad de veces que aparece 
 -- el Caracter dado en la lista. 
