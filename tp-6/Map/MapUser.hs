@@ -9,7 +9,7 @@ lookupsM :: Eq k => [k] -> Map k v -> [Maybe v]
 -- EFICIENCIA: O(n*m) 
 -- O(n # siendo n la longitud de la lista de ks ya que es hace RE sobre la misma
 -- * # por cada elemento de ks se hace
--- m # lookupM de k a map que es de costo m
+-- m # lookupM de k a map que es de costo m -- PONE N 
 --))
 {-           
             el map en realidad tiene estos pares porque admite repetidos       
