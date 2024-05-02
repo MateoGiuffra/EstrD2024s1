@@ -12,7 +12,9 @@ bst = insertBST 9
         $ insertBST 200  
         $ insertBST 30
         $ insertBST 10 
-        $ insertBST 20         
+        $ insertBST 190         
+        $ insertBST 195
+        $ insertBST 201
         $ insertBST 100 EmptyT 
 
 noBST = NodeT 10 (NodeT 100 EmptyT EmptyT) (NodeT 9 EmptyT EmptyT)
@@ -92,16 +94,34 @@ esMenorQueTodos r (NodeT x ti td) = r <= x && esMenorQueTodos r ti && esMenorQue
 
 
 elMaximoMenorA :: Ord a => a -> Tree a -> Maybe a
--- Propósito: dado un BST y un elemento, devuelve el máximo elemento que sea menor al
--- elemento dado.
+-- Propósito: dado un BST y un elemento, devuelve el máximo elemento que sea menor al elemento dado.
 -- Costo: O(log N)
-elMaximoMenorA e EmptyT          = Nothing
-elMaximoMenorA e (NodeT x EmptyT td) = Just x 
-elMaximoMenorA e (NodeT x ti EmptyT ) = Just x 
-elMaximoMenorA e (NodeT x ti td) = if x > e 
-                                    then justFrom elMaximoMenorA 
-                                    else
+elMaximoMenorA e EmptyT          = Nothing 
+elMaximoMenorA e (NodeT x ti td) =  if isEmptyT ti 
+                                    then Nothing
+                                    else if e < x  
+                                        then elMaximoMenorA e ti  
+                                        else elMaximoMenorA e td 
 
+maxMaybes ::  Ord a => Maybe a -> Maybe a -> Maybe a
+maxMaybes m1 m2 = if isNothing m1 || isNothing m2 
+                    then Nothing 
+                    else if justFrom m1 > justFrom m2 
+                        then m1 
+                        else m2 
+justFrom :: Maybe a -> a 
+justFrom (Just a) = a 
+
+isNothing ::Maybe a -> Bool 
+isNothing Nothing = True 
+isNothing _       = False
+-- if e < x  
+--                                   then case elMaximoMenorA e ti of
+--                                        Nothing -> Just x 
+--                                        Just r  -> Just (max r x)
+--                                   else case elMaximoMenorA e td of
+--                                        Nothing -> Just x
+--                                        Just r  -> Just (max r x)   
 
 elMaximoEntre :: Ord a => Maybe a -> Maybe a -> Maybe a
 --PRECONDICION: Maybe a tiene que ser Just.
