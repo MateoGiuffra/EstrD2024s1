@@ -41,19 +41,21 @@ insertBST e (NodeT x ti td) = if e == x
                                     else if e < x 
                                       then NodeT x (insertBST e ti) td  
                                       else NodeT x ti (insertBST e td)                          
--- deleteBST :: Ord a => a -> Tree a -> Tree a
--- -- Propósito: dado un BST borra un elemento en el árbol.
--- -- Costo: O(log N)
--- deleteBST _ EmptyT          = EmptyT 
--- deleteBST e (NodeT x ti td) = if x == e 
---                                 then reArmarBST ti td 
---                                 else if e < x 
---                                 then NodeT x (deleteBST e ti) td
---                                 else NodeT x ti (deleteBST e td)   
+deleteBST :: Ord a => a -> Tree a -> Tree a
+-- Propósito: dado un BST borra un elemento en el árbol.
+-- Costo: O(log N)
+deleteBST _ EmptyT          = EmptyT 
+deleteBST e (NodeT x ti td) = if x == e 
+                                then reArmarBST ti td 
+                                else if e < x 
+                                then NodeT x (deleteBST e ti) td
+                                else NodeT x ti (deleteBST e td)   
 
--- reArmarBST :: Ord a => Tree a -> Tree a -> Tree a 
-
-
+reArmarBST :: Ord a => Tree a -> Tree a -> Tree a 
+reArmarBST ti td = let (r,arbolSinMax) = splitMaxBST ti in
+                    NodeT r arbolSinMax td
+                                   
+bstBalanceado = (NodeT 100 (NodeT 20 (NodeT 10 (NodeT 5 EmptyT EmptyT)(NodeT 15 EmptyT EmptyT)) (NodeT 30 (NodeT 29 EmptyT EmptyT) (NodeT 33 EmptyT EmptyT))) (NodeT 200 (NodeT 150 (NodeT 120 EmptyT EmptyT) (NodeT 180 EmptyT EmptyT)) (NodeT 300 (NodeT 250 EmptyT EmptyT) (NodeT 350 EmptyT EmptyT))))
 
 splitMinBST :: Ord a => Tree a -> (a, Tree a)
 -- Propósito: dado un BST devuelve un par con el mínimo elemento y el árbol sin el mismo.
