@@ -17,6 +17,8 @@ bst = insertBST 9
         $ insertBST 201
         $ insertBST 100 EmptyT 
 
+avl=NodeT 100 (NodeT 10 (NodeT 9 EmptyT EmptyT)(NodeT 30 EmptyT EmptyT)) (NodeT 195 (NodeT 190 EmptyT EmptyT)(NodeT 201 (NodeT 200 EmptyT EmptyT)EmptyT))
+
 noBST = NodeT 10 (NodeT 100 EmptyT EmptyT) (NodeT 9 EmptyT EmptyT)
 falsoBST = NodeT  30 (NodeT 14 (NodeT 16 EmptyT EmptyT)((NodeT 8 EmptyT EmptyT))) (NodeT 34 EmptyT EmptyT)
 
@@ -38,9 +40,7 @@ insertBST e (NodeT x ti td) = if e == x
                                 then NodeT e ti td  
                                     else if e < x 
                                       then NodeT x (insertBST e ti) td  
-                                      else NodeT x ti (insertBST e td)
-root :: Tree a -> a
-root (NodeT a _ _) = a                            
+                                      else NodeT x ti (insertBST e td)                          
 -- deleteBST :: Ord a => a -> Tree a -> Tree a
 -- -- Propósito: dado un BST borra un elemento en el árbol.
 -- -- Costo: O(log N)
@@ -101,8 +101,7 @@ elMaximoMenorA e (NodeT x ti td) = if e > x
                                    then case elMaximoMenorA e td of
                                       Nothing -> Just x 
                                       Just r  -> Just (max x r)
-                                    else elMaximoMenorA e ti 
-
+                                     else elMaximoMenorA e ti 
 justFrom :: Maybe a -> a 
 justFrom (Just a) = a 
 
@@ -111,11 +110,29 @@ isNothing Nothing = True
 isNothing _       = False
 
                     
--- elMinimoMayorA :: Ord a => a -> Tree a -> Maybe a
--- -- Propósito: dado un BST y un elemento, devuelve el mínimo elemento que sea mayor al
--- -- elemento dado.
--- -- Costo: O(log N)
--- balanceado :: Tree a -> Bool
--- -- Propósito: indica si el árbol está balanceado. Un árbol está balanceado cuando para cada
+elMinimoMayorA :: Ord a => a -> Tree a -> Maybe a
+-- Propósito: dado un BST y un elemento, devuelve el mínimo elemento que sea mayor al
+-- elemento dado.
+-- Costo: O(log N)
+elMinimoMayorA e EmptyT          = Nothing    
+elMinimoMayorA e (NodeT x ti td) = if e < x
+                                   then case elMinimoMayorA e ti of
+                                      Nothing -> Just x 
+                                      Just r  -> Just (min x r)
+                                    else elMinimoMayorA e td  
+balanceado :: Tree a -> Bool
+-- Propósito: indica si el árbol está balanceado. Un árbol está balanceado cuando para cada
 -- nodo la diferencia de alturas entre el subarbol izquierdo y el derecho es menor o igual a 1.
--- -- Costo: O(N2)
+-- Costo: O(N2)
+balanceado EmptyT          = True 
+balanceado (NodeT x ti td) = (heightT  ti - heightT  td ) <= 1 && balanceado ti && balanceado td
+
+-- FUNCION AUXILIAR TP3
+heightT :: Tree a -> Int
+--Dado un árbol devuelve su altura.
+--Nota: la altura de un árbol (height en inglés), también llamada profundidad, es la cantidad de niveles del árbol. 
+--La altura para EmptyT es 0, y para una hoja es 1.
+heightT EmptyT            = 0 
+heightT (NodeT _ izq der) = if heightT izq > heightT der 
+                                then 1 + heightT izq  
+                                else 1 + heightT der 
