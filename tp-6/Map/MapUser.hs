@@ -89,7 +89,7 @@ justFrom (Just a) =  a
 
 agruparEq :: Eq k => [(k, v)] -> Map k [v]
 -- Proposito: dada una lista de pares clave valor, agrupa los valores de los pares que compartan la misma clave.
--- EFICIENCIA: O(n*m)
+-- EFICIENCIA: O(n^2) 
 -- O(n # siendo n la longitud de la lista de pares ya que se hace RE sobre la misma
 -- *   # por cada (k,v) de kvs se hace:
 -- (n  # por lookupM de k y la RE 

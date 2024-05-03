@@ -5,8 +5,9 @@
 -- del árbol. Justicar por qué la implementación satisface los costos dados.
 
 data Tree a = EmptyT | NodeT a (Tree a) (Tree a)
-            deriving Show
 
+
+-- VARIABLES: 
             
 bst = insertBST 9
         $ insertBST 200  
@@ -16,11 +17,11 @@ bst = insertBST 9
         $ insertBST 195
         $ insertBST 201
         $ insertBST 100 EmptyT 
-
-avl=NodeT 100 (NodeT 10 (NodeT 9 EmptyT EmptyT)(NodeT 30 EmptyT EmptyT)) (NodeT 195 (NodeT 190 EmptyT EmptyT)(NodeT 201 (NodeT 200 EmptyT EmptyT)EmptyT))
-
-noBST = NodeT 10 (NodeT 100 EmptyT EmptyT) (NodeT 9 EmptyT EmptyT)
-falsoBST = NodeT  30 (NodeT 14 (NodeT 16 EmptyT EmptyT)((NodeT 8 EmptyT EmptyT))) (NodeT 34 EmptyT EmptyT)
+                             
+bstBalanceado = (NodeT 100 (NodeT 20 (NodeT 10 (NodeT 5 EmptyT EmptyT)(NodeT 15 EmptyT EmptyT)) (NodeT 30 (NodeT 29 EmptyT EmptyT) (NodeT 33 EmptyT EmptyT))) (NodeT 200 (NodeT 150 (NodeT 120 EmptyT EmptyT) (NodeT 180 EmptyT EmptyT)) (NodeT 300 (NodeT 250 EmptyT EmptyT) (NodeT 350 EmptyT EmptyT))))
+avl           = NodeT 100 (NodeT 10 (NodeT 9 EmptyT EmptyT)(NodeT 30 EmptyT EmptyT)) (NodeT 195 (NodeT 190 EmptyT EmptyT)(NodeT 201 (NodeT 200 EmptyT EmptyT)EmptyT))
+noBST         = NodeT 10 (NodeT 100 EmptyT EmptyT) (NodeT 9 EmptyT EmptyT)
+falsoBST      = NodeT  30 (NodeT 14 (NodeT 16 EmptyT EmptyT)((NodeT 8 EmptyT EmptyT))) (NodeT 34 EmptyT EmptyT)
 
 belongsBST :: Ord a => a -> Tree a -> Bool
 -- Propósito: dado un BST dice si el elemento pertenece o no al árbol.
@@ -40,7 +41,8 @@ insertBST e (NodeT x ti td) = if e == x
                                 then NodeT e ti td  
                                     else if e < x 
                                       then NodeT x (insertBST e ti) td  
-                                      else NodeT x ti (insertBST e td)                          
+                                      else NodeT x ti (insertBST e td)    
+
 deleteBST :: Ord a => a -> Tree a -> Tree a
 -- Propósito: dado un BST borra un elemento en el árbol.
 -- Costo: O(log N)
@@ -54,8 +56,6 @@ deleteBST e (NodeT x ti td) = if x == e
 reArmarBST :: Ord a => Tree a -> Tree a -> Tree a 
 reArmarBST ti td = let (r,arbolSinMax) = splitMaxBST ti in
                     NodeT r arbolSinMax td
-                                   
-bstBalanceado = (NodeT 100 (NodeT 20 (NodeT 10 (NodeT 5 EmptyT EmptyT)(NodeT 15 EmptyT EmptyT)) (NodeT 30 (NodeT 29 EmptyT EmptyT) (NodeT 33 EmptyT EmptyT))) (NodeT 200 (NodeT 150 (NodeT 120 EmptyT EmptyT) (NodeT 180 EmptyT EmptyT)) (NodeT 300 (NodeT 250 EmptyT EmptyT) (NodeT 350 EmptyT EmptyT))))
 
 splitMinBST :: Ord a => Tree a -> (a, Tree a)
 -- Propósito: dado un BST devuelve un par con el mínimo elemento y el árbol sin el mismo.
