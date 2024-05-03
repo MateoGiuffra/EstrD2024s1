@@ -96,42 +96,21 @@ esMenorQueTodos r (NodeT x ti td) = r <= x && esMenorQueTodos r ti && esMenorQue
 elMaximoMenorA :: Ord a => a -> Tree a -> Maybe a
 -- Propósito: dado un BST y un elemento, devuelve el máximo elemento que sea menor al elemento dado.
 -- Costo: O(log N)
-elMaximoMenorA e EmptyT          = Nothing 
-elMaximoMenorA e (NodeT x ti td) =  if isEmptyT ti 
-                                    then Nothing
-                                    else if e < x  
-                                        then elMaximoMenorA e ti  
-                                        else elMaximoMenorA e td 
+elMaximoMenorA e EmptyT          = Nothing    
+elMaximoMenorA e (NodeT x ti td) = if e > x
+                                   then case elMaximoMenorA e td of
+                                      Nothing -> Just x 
+                                      Just r  -> Just (max x r)
+                                    else elMaximoMenorA e ti 
 
-maxMaybes ::  Ord a => Maybe a -> Maybe a -> Maybe a
-maxMaybes m1 m2 = if isNothing m1 || isNothing m2 
-                    then Nothing 
-                    else if justFrom m1 > justFrom m2 
-                        then m1 
-                        else m2 
 justFrom :: Maybe a -> a 
 justFrom (Just a) = a 
 
 isNothing ::Maybe a -> Bool 
 isNothing Nothing = True 
 isNothing _       = False
--- if e < x  
---                                   then case elMaximoMenorA e ti of
---                                        Nothing -> Just x 
---                                        Just r  -> Just (max r x)
---                                   else case elMaximoMenorA e td of
---                                        Nothing -> Just x
---                                        Just r  -> Just (max r x)   
 
-elMaximoEntre :: Ord a => Maybe a -> Maybe a -> Maybe a
---PRECONDICION: Maybe a tiene que ser Just.
-elMaximoEntre m1 m2 = let (Just a) = m1 in  
-                        let (Just b) = m2 in 
-                         if a > b
-                          then m1
-                          else m2  
                     
-
 -- elMinimoMayorA :: Ord a => a -> Tree a -> Maybe a
 -- -- Propósito: dado un BST y un elemento, devuelve el mínimo elemento que sea mayor al
 -- -- elemento dado.
