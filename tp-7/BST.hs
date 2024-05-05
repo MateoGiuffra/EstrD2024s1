@@ -104,6 +104,7 @@ elMaximoMenorA e (NodeT x ti td) = if e > x
                                       Nothing -> Just x 
                                       Just r  -> Just (max x r)
                                      else elMaximoMenorA e ti 
+
 justFrom :: Maybe a -> a 
 justFrom (Just a) = a 
 

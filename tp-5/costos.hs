@@ -141,6 +141,9 @@ orderar xs = let m = minimo xs in m : ordenar (sacar m xs)
 * Tiene que tener caso invalido y valido. 
 * No aclarar obviedades como, la edad de una persona tiene que ser un numero cuando ya puse que es un Int. (P String Int)
                                                                                                          -- Nombre Edad
+* Tiene ser atemporal 
+* Tiene que responderse por si o no. (Se puede programar a ver si se cumple esa invariante)
+
 
 -}
 

@@ -78,47 +78,54 @@ Costo: O(S)
 justFrom :: Maybe a -> a 
 justFrom (Just a) = a 
 
-
+-- a)
 consEmpresa :: Empresa
 -- Propósito: construye una empresa vacía.
 -- Costo: O(1)
 consEmpresa = ConsE emptyM emptyM
 
+-- b)
 buscarPorCUIL :: CUIL -> Empresa -> Empleado
 -- Propósito: devuelve el empleado con dicho CUIL.
 -- Precondición: el CUIL es de un empleado de la empresa.
 -- Costo: O(log E)
 -- log E # porque se usa lookupM siendo E la cantidad de los elementos del m2.
-buscarPorCUIL cuit (ConsE _ m2) = justFrom (lookupM cuit m2) 
+buscarPorCUIL cuit (ConsE _ m2) =  case lookupM cuit m2 of 
+                                    Nothing -> error"No existe el empleado"
+                                    Just e  -> e   
 
-
+-- c)
 empleadosDelSector :: SectorId -> Empresa -> [Empleado]
 -- Propósito: indica los empleados que trabajan en un sector dado.
 -- Costo: O(log S + E)
--- log S # por lookupM sobre m1 siendo S la cantidad de elementos de m1.
+-- log S # por lookupM sobre m1 siendo S la cantidad de elementos de m1. cantidad de sectores de la empresa. 
 -- +     # tambien se hace:
--- E     # por setToList sobre set siendo E todos los elementos del set. 
+-- E     # por setToList sobre set siendo E todos los elementos del set/la cantidad de empleados asignados a un SectorId 
 empleadosDelSector sId (ConsE m1 _) = case lookupM sId m1 of
                                         Nothing  -> []
                                         Just set -> setToList set    
 
-
+-- d)
 todosLosCUIL :: Empresa -> [CUIL]
 -- Propósito: indica todos los CUIL de empleados de la empresa.
 -- Costo: O(E) # siendo E la cantidad de elementos del Map m2.
 todosLosCUIL (ConsE _ m2) = keys m2  
 
+
+-- e)
 todosLosSectores :: Empresa -> [SectorId]
 -- Propósito: indica todos los sectores de la empresa.
 -- Costo: O(S) # siendo S la cantidad de elementos del Map m1.
 todosLosSectores (ConsE m1 _) = keys m1 
 
+
+-- f)
 agregarSector :: SectorId -> Empresa -> Empresa
 -- Propósito: agrega un sector a la empresa, inicialmente sin empleados.
 -- Costo: O(log S) # por assocM sobre m1. 
 agregarSector sId (ConsE m1 m2) = ConsE (assocM sId emptyS m1) m2
 
-
+-- g)
 agregarASector :: SectorId -> CUIL -> Empresa -> Empresa
 -- Propósito: agrega un sector al empleado con dicho CUIL.
 -- Costo: O(Log E + Log S) 
@@ -134,6 +141,7 @@ agregarASector sId cuil (ConsE m1 m2) = case lookupM cuil m2 of
                                             Nothing -> "No existe el empleado"
                                             Just  e -> ConsE (sectorA sId (incorporarSector sId e) m1) (assocM cuil (incorporarSector sId e) m2)     
 
+-- h)
 borrarEmpleado :: CUIL -> Empresa -> Empresa
 -- Propósito: elimina al empleado que posee dicho CUIL.
 -- Costo: O(Log E + Log S + N)
@@ -141,7 +149,7 @@ borrarEmpleado :: CUIL -> Empresa -> Empresa
 -- +
 -- Log E # por deleteM sobre m2. 
 -- + 
--- N    # por sectores sobre el Empleado e, siendo N la cantidad de sectores que el empleado tiene asignados. 
+-- N     # por sectores sobre el Empleado e, siendo N la cantidad de sectores que el empleado tiene asignados. 
 -- + 
 -- Log S # por eliminarEmpleadoDeLosSets siendo S la cantidad de elementos del map m1.
 -- O(Log E + Log E + N + Log S)
@@ -150,9 +158,14 @@ borrarEmpleado :: CUIL -> Empresa -> Empresa
 borrarEmpleado cuil (ConsE m1 m2) = case lookupM cuil m2 of
                                         Nothing -> ConsE m1 m2
                                         Just  e -> ConsE (eliminarEmpleadoDeLosSets (sectores e) e  m1) (deleteM cuil m2)
+e [a,b,c,d]
+empresa M [a e,b e,c e,d e] [45m e]
+empresa M [a emptyS,b emptyS,c emptyS,d emptyS] []
+
 
 eliminarEmpleadoDeLosSets :: [SectorId] -> Empleado -> (Map SectorId (Set Empleado)) -> (Map SectorId (Set Empleado))
--- PROPOSITO: Dado una lista de SectorId, un empleado y un Map SectorId (Set Empleado), describe un nuevo map con el empleado eliminado de cada SectorId de la lista.
+-- PROPOSITO: Dado una lista de SectorId, un empleado y un Map SectorId (Set Empleado), describe un nuevo map con el empleado 
+-- eliminado de cada SectorId de la lista.
 -- COSTO: Log M o 3Log M
 -- Log M # por lookupM, assocM y deleteM sobre el map, siendo M la cantidad de elementos del mismo.  
 eliminarEmpleadoDeLosSets []     e map = map 
@@ -160,17 +173,18 @@ eliminarEmpleadoDeLosSets (s:ss) e map = case lookupM s map of
                                             Nothing   -> error"Se rompio la invariante"
                                             Just setE -> assocM s (deleteM e setE) (eliminarEmpleadoDeLosSets ss e map)
 
-
+-- i)
 agregarEmpleado :: [SectorId] -> CUIL -> Empresa -> Empresa
 -- Propósito: agrega un empleado a la empresa, que trabajará en dichos sectores y tendrá el CUIL dado.
 -- Costo: 
--- O(n*log S)  # por incorporarSectores, siendo n la lontitud de ss y siendo S la cantidad de SectorId que el empleado tiene asignados. 
+-- O(n*log S) # por incorporarSectores, siendo n la lontitud de ss y siendo S la cantidad de SectorId que el empleado tiene asignados. 
 -- + 
--- log E       # por lookupM sobre m2 siendo E la cantidad de elementos de m2. 
+-- log E      # por lookupM sobre m2 siendo E la cantidad de elementos de m2. 
 -- + 
 -- log E      # por assocM sobre m2, siendo E la cantidad de elementos de m2.
 -- + 
 -- O(n * (Log E  + Log V)) # por sectoresA, siendo V la cantidad de empleados del SetEmpleado de m1.
+
 -- O (n*(Log S) + log E + log E + (n*(Log E + Log V)))
 -- O (n* Log S + 2log E + n*(Log E + Log V))
 -- O (2log E + n*(Log E + Log V + Log S))

@@ -475,7 +475,7 @@ agregarExplorador n []     tns = []
 agregarExplorador n (t:ts) tns = (t,[n]) : agregarExplorador n ts tns 
 
 combinarResultados ::  [(Territorio, [Nombre])] ->  [(Territorio, [Nombre])] ->  [(Territorio, [Nombre])]
-combinarResultados  []           tns2  = tns2
+combinarResultados  []       tns2  = tns2
 combinarResultados (tn:tns)  tns2  = let (t,ns) = tn in
                                         agregarNombresATerritorio t ns (combinarResultados tns tns2)
 

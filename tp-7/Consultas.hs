@@ -13,6 +13,6 @@ LINEA 66 (FUNCION listToMap)
 -}
 {- 
                         Empresa.hs
-LINEA 132 (FUNCION agregarASector)
+LINEA 137 (FUNCION agregarASector)
 -- O(Log E + Log S)  # porque se suprime la constante en 2Log E --- Esta bien suprimir el 2? Como se justifica?
 -}
