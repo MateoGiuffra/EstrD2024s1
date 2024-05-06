@@ -491,3 +491,4 @@ combinarNombres []     ys = ys
 combinarNombres (x:xs) ys = if pertenece x ys
                                 then combinarNombres xs ys 
                                 else x : (combinarNombres xs ys) 
+

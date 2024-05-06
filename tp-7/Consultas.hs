@@ -13,6 +13,8 @@ LINEA 66 (FUNCION listToMap)
 -}
 {- 
                         Empresa.hs
+INVARIANTE DE EL EMPLEADO BORRADO. Cuando lo borro, si no borro SUS sectores asignados rompe el invariante? 
+
 LINEA 137 (FUNCION agregarASector)
 -- O(Log E + Log S)  # porque se suprime la constante en 2Log E --- Esta bien suprimir el 2? Como se justifica?
 -}
