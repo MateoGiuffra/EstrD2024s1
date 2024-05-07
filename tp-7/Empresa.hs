@@ -10,6 +10,13 @@
     
     * tanto Map como Set exponen una interfaz eciente con costos logarítmicos para inserción,
     * búsqueda y borrado, tal cual vimos en clase.
+   INV hechas en clase:
+   el cuil de la clave tiene que ser el mismo cuil que el empleado
+dado un sectorId, los empleados del conjunto tienen que aparecer en el conjunto de sectores de los empleados 
+todos los empleados del set empleado aparecen en empleado de (map cuil empleado)
+todas las ocurrencias de un empleado son iguales  
+si pido los sectores de un empleado, en todos los sectores que aparece el mismo, deberian de devolver la misma lista. 
+
 -}
 module Empresa (
     Empresa,
