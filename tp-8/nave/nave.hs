@@ -20,9 +20,9 @@ data Nave = N (Map SectorId Sector) (Map Nombre Tripulante) (MaxHeap Tripulante)
 
 {- a)
             INV. REP: Dada una Nave: N (m1 sId s) (m2 nombre tri) (mh t)
-            * Si m2 esta vacio, mh tambien y los sectores no tienen tripulantes asignados.          
+            * Si m2 esta vacio, mh tambien y viceversa. Ademas los sectores no tienen tripulantes asignados.          
             * En m1, por cada sectorId que este asociado a un tripulante "x", tiene que aparecer 
-              como sectorId en el set sectoresT de "x". Ademas, tiene que ser el MISMO sectorId.
+              como sectorId en el set de SectorId de "x". Ademas, tiene que ser el MISMO sectorId.
             * Los tripulantes asignados de los sectores de m1 tienen que existir y ser los mismos que en m2 y en mh, pero no viceversa.
             * Los tripulantes de mh tienen que existir y ser los MISMOS en m2 y viceversa. 
             
@@ -91,41 +91,25 @@ datosDeSector sId (N m1 m2 mh) = case lookupM sId m1 of
 tripulantesN :: Nave -> [Tripulante]
 -- Propósito: Devuelve la lista de tripulantes ordenada por rango, de mayor a menor.
 -- Eficiencia: O(log T)
--- EFICIENCIA: O(T^2) # por tripulantesMH sobre el MaxHeap de la nave.
+-- EFICIENCIA: O(T*(log T))  # por tripulantesMH sobre el MaxHeap de la nave.
 tripulantesN (N _ _ mh) = tripulantesMH mh 
 
 tripulantesMH :: MaxHeap Tripulante -> [Tripulante]
 -- PROPOSITO: Devuelve la lista de tripulantes ordenada por rango, de mayor a menor.
--- EFICIENCIA: O(T^2)
--- O( T # ya que se hace RE sobre MaxHeap 
--- *    # por cada tripulante del MaxHeap se hace:
--- (T   # por insertarSegunRango sobre el MaxHeap, por eso es el mismo T 
+-- EFICIENCIA: O(T*(log T)) 
+-- O( T   # ya que se hace RE sobre MaxHeap 
+-- *      # por cada tripulante del MaxHeap se hace:
+-- (log T # por deleteMaxH sobre el MaxHeap, por eso es el mismo T 
 --  + 
---  1)) # por MaxHeap 
--- O(T*(T + 1))
--- O(T*(T))     # porque se queda lo mas costoso.
--- O(T^2)
+--  1))   # por MaxHeap 
+-- O(T*(log T + 1))
+-- O(T*(log T))     # porque se queda lo mas costoso.
 tripulantesMH emptyH =  []
-tripulantesMH mh     =  insertarSegunRango (MaxHeap mh) (tripulantesMH (deleteMaxH mh))
+tripulantesMH mh     =  (MaxHeap mh) : (tripulantesMH (deleteMaxH mh))
 
 
-insertarSegunRango ::  Tripulante -> [Tripulante] -> [Tripulante]
--- EFICIENCIA:
--- O(n # siendo n la longitud de la lista de Tripulante ya que se hace RE sobre la misma  
--- *   # por cada x de xs se hace:
--- 1   # por rango sobre e y x 
--- + 
--- 1   # por el cons
--- )
--- O(n*(1+1)) 
--- O(n)       # porque queda el de mayor costo.
-insertarSegunRango e []     = [e]
-insertarSegunRango e (x:xs) = if rango e > rango x  
-                                then e:x:xs 
-                                else x : insertarSegunRango e xs  
 
-
--- -- g) 
+-- g) 
 agregarASector :: [Componente] -> SectorId -> Nave -> Nave
 -- Propósito: Asigna una lista de componentes a un sector de la nave.
 -- Eficiencia: O(C + log S), siendo C la cantidad de componentes dados.
@@ -154,19 +138,70 @@ asignarASector :: Nombre -> SectorId -> Nave -> Nave
 -- Nota: No importa si el tripulante ya tiene asignado dicho sector.
 -- Precondición: El tripulante y el sector existen.
 -- Eficiencia: O(log S + log T + T log T)
-asignarASector n sid (N m1 m2 mh) = (N (asignarTripulanteA sid n m1) (asignarSectorA sid n m2) mh) 
+-- O(Log T + Log S + T*(Log T + Log S)) 
 
+-- O(Log T + Log S    # por asignarTripulanteA sobre el map m1 
+-- + 
+-- O(Log T + Log S    # por asignarSectorA a el map m2 
+-- + 
+-- O(T*(Log T + Log S # por updateTripulante sobre el maxheap mh 
+-- ))
+-- O(Log T + Log S  +  Log T + Log S + T*(Log T + Log S)) 
+-- O(2Log T + 2Log S + T*(Log T + Log S))   # por agrupacion de terminos asemejantes
+-- O(Log T + Log S + T*(Log T + Log S))     # porque se suprime 2Log T y 2Log S
 
-asignarTripulanteA :: SectorId -> Nombre -> Map Nombre Tripulante -> Map Nombre Tripulante
+asignarASector n sid (N m1 m2 mh) = (N (asignarTripulanteA sid n m1) (asignarSectorA sid n m2) (updateTripulante n mh)) 
+
+updateTripulante :: SectorId -> Nombre -> MaxHeap Tripulante -> MaxHeap Tripulante
+-- PROPOSITO: Asigna el sector dado a un tripulante con el nombre dado a el MaxHeap Tripulante dado. 
+-- PRECONDICION: El tripulante y el sector existen. 
+-- EFICIENCIA:O(T*(Log T + Log S)) 
+-- O(T     # siendo T la cantidad de tripulantes del MaxHeap ya que se hace RE sobre el mismo.
+-- *       # por cada tripulante del MaxHeap se hace: 
+-- (Log T  # por insertH sobre la RE 
+-- +    
+-- Log T   # por deleteMaxH sobre la RE  
+-- + 
+-- Log S   # asignarS siendo S la cantidad de Sectores.
+-- ))
+-- O(T*(Log T+Log T+Log S))
+-- O(T*(2Log T + Log S)) # por agrupacion de terminos asemejantes
+-- O(T*(Log T + Log S))  # porque se suprime 2Log T
+
+updateTripulante sid n emptyH = emptyH 
+updateTripulante sid n mh     = let trip = maxH mh in 
+                                if nombre trip  == n 
+                                  then insertH (asignarS sid trip) mh 
+                                  else insertH trip (updateTripulante(deleteMaxH mh))
+
+asignarTripulanteA :: SectorId -> Nombre -> Map SectorId Sector -> Map SectorId Sector
+-- EFICIENCIA:O(Log T + Log S)
+-- O Log S # por lookupM sobre el map de Sectores 
+-- + 
+-- Log S  # por assocM sobre el map
+-- + 
+-- Log T # por agregarT siendo T la cantidad de tripulantes
+-- O(Log S + Log T + Log S)
+-- O(Log T + Log S)
+
 asignarTripulanteA sid n m = case lookupM sid m of
                                   Nothing -> error "No existe"
-                                  Just  s -> assocM n (asignarS sid t) m 
+                                  Just  s -> assocM sid (agregarT n s) m 
 
 
 asignarSectorA :: SectorId -> Nombre -> Map Nombre Tripulante -> Map Nombre Tripulante
+-- EFICIENCIA:O(Log T + Log S)
+-- O Log T # por lookupM sobre el map de Tripulantes 
+-- + 
+-- Log T  # por assocM sobre el map
+-- + 
+-- Log S # por asignarS siendo S la cantidad de sectores
+-- O(Log T + Log T + Log S)
+-- O(Log T + Log S)
+
 asignarSectorA sid n m = case lookupM n m of
                           Nothing -> error "No existe"
-                          Just  s -> assocM n (agregarT n s) m 
+                          Just  t -> assocM n (asignarS sid t) m 
 
 -- ==============================================================================================================================================================================
 --                  Anexo de interfaces                 Anexo de interfaces                 Anexo de interfaces

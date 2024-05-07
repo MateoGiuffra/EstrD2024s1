@@ -1,13 +1,11 @@
 import MaxHeap
 
-
-
 heap = crearHeap [10,50,100,1,8] emptyH
 
 tripulantesMH :: Ord a => MaxHeap a -> [a]
 tripulantesMH mh =  if isEmptyH mh 
                         then [] 
-                        else insertarEnOrden (maxH mh) (tripulantesMH (deleteMaxH mh))
+                        else (maxH mh) : (tripulantesMH (deleteMaxH mh))
 
 insertarEnOrden :: Ord a => a -> [a] -> [a]
 insertarEnOrden e []     = [e]
