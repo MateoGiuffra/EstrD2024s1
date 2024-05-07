@@ -143,7 +143,7 @@ orderar xs = let m = minimo xs in m : ordenar (sacar m xs)
                                                                                                          -- Nombre Edad
 * Tiene ser atemporal 
 * Tiene que responderse por si o no. (Se puede programar a ver si se cumple esa invariante)
-
+* Son propiedades que cumple nuestro dato
 
 -}
 
