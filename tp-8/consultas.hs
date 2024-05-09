@@ -1,3 +1,4 @@
-{-      nave.hs
-
+{-      enterprise.hs
+Consultar eficiencias:
+        sectorDe 
 -}
