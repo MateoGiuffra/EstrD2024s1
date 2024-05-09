@@ -14,7 +14,9 @@ import MapV1
 import SetV1
 import MaxHeap
 import TripulanteEnterprise
+
 type Sector = String 
+
 data Nave = MkN (Map Sector (Set Tripulante)) (MaxHeap Tripulante) (Sector, Int)
 
 
@@ -35,6 +37,20 @@ data Nave = MkN (Map Sector (Set Tripulante)) (MaxHeap Tripulante) (Sector, Int)
               El int debe ser la cantidad de tripulantes asignados a ese sector.  
 -}
 
+t1 = crearT "T1" 20 
+t2 = crearT "T2" 20 
+t3 = crearT "T3" 220 
+t4 = crearT "T4" 203 
+t5 = crearT "T5" 10 
+
+
+nave = agregarTripulante t1 "S1" 
+      $ agregarTripulante t2 "S2" 
+       $ agregarTripulante t3 "S3"   -- En S3 Y S1 hay un tripulante
+       $ agregarTripulante t1 "S2"   -- este no se agregaria.  
+       $ agregarTripulante t4 "S2" n 
+-- en S2 hay dos tripulantes
+n = (naveVacia ["S1","S2","S3","S4","S5"])
 
 naveVacia :: [Sector] -> Nave
 -- Propósito: Crea una nave con todos esos sectores sin tripulantes.
@@ -128,41 +144,85 @@ sectorDel t (s:ss) m = case lookupM s m of
                                     then s 
                                     else sectorDel t ss m  
 
+
+
 agregarTripulante :: Tripulante -> Sector -> Nave -> Nave
 -- Propósito: Agrega un tripulante a ese sector de la nave.
 -- Precondición: El sector está en la nave y el tripulante no.
 -- Costo: No hay datos (justifique su elección).
+-- (S*(log S + log T) + log T + log S # por asignarTrip, siendo T la cantidad de Tripulantes de la nave, S la cantidad de Sectores de la nave.
+-- + 
+-- log T # por insertH sobre el Heap. 
+-- +
+-- S*(log S + log T) + log T + log S ) # por updateSectorMembers 
+-- + 
+-- 1 # por updateSector
+-- O(S*(log S + log Tt) + log T + log S  + O(S*(log S + log t) + log t + log S ) + log T + 1
+-- (2*(S*(log S + log T)) + log S + (2*log T) + 1) # por agrupacion de terminos semejantes. 
+-- O(S*(log S + log T) + log S + log T )           # porque no importan las constantes 1 y 2.   
 agregarTripulante t s (MkN m h sInt) = MkN  (asignarTrip s t m) 
                                             (insertH t h) 
                                             (updatePar sInt (updateSectorMembers s t m)) 
 
 asignarTrip :: Sector -> Tripulante ->  Map Sector (Set Tripulante) ->  Map Sector (Set Tripulante)
-asignarTrip s t map = let (s',setUpdated) = updateSectorMembers s t map  in 
-                        assocM s' setUpdated map    
+-- Proposito: Dado un sector, un tripulante y un Map Sector (Set Tripulante) agrega el sector y el Set Tripulante de el  mismo actualizado  al map
+-- Eficiencia: O(S*(log S + log t) + log t + log S )
+-- log S por assocM sobre el map, siendo S la cantidad de sectores del map 
+-- + 
+-- O(S*(log S + log t) + log t + log S ) # por updateSectorMembers 
+-- O(S*(log S + log t) + log t + log S + log S)
+-- O(S*(log S + log t) + log t + 2log S ) # por agrupacion de terminos semejantes. 
+-- O(S*(log S + log t) + log t + log S )  # porque no importa la constante 2
+asignarTrip s t map = let (s',setUpdated) = updateSectorMembers s t map  in  assocM s' setUpdated map    
     
     
 updateSectorMembers :: Sector -> Tripulante ->  Map Sector (Set Tripulante) -> (Sector, (Set Tripulante))
+-- Proposito: Devuelve una tupla del sector dado con el tripulante dado agregado si es que no existe en el map, caso contrario lo devuelve
+-- sin agregar. 
+-- Eficiencia: O(S*(log S + log t) + log t + log S )
+-- O(S*(log S + log t) + log t)) # por addNewMember. 
+-- + 
+-- log S # por lookupM sobre el map.
+-- O(S*(log S + log t) + log t + log S )
 updateSectorMembers s t map  = case lookupM s map  of
                                 Nothing  -> error"No existe el sector"
                                 Just set -> addNewMember t s set map  
 
 
 addNewMember :: Tripulante -> Sector -> Set Tripulante ->  Map Sector (Set Tripulante) -> (Sector, (Set Tripulante))
+-- Proposito: Devuelve una tupla del sector dado con el tripulante dado agregado si es que no existe en el map, caso contrario lo devuelve
+-- sin agregar
+-- Eficiencia: O(S*(log S + log t) + log t)) 
+-- (S*(log S + log t)) # por alreadyExists sobre el map y con las keys de ese map, por ende s y k son lo mismo, por eso queda S, siendo 
+-- S la cantidad de sectores del map. 
+-- + 
+-- log t # por addS sobre el set.
+-- S*(log S + log t) + log t)
 addNewMember t s set m = if alreadyExists t (keys m) m
                             then (s,set) 
                             else (s, addS t set)
 
 alreadyExists :: Tripulante ->  [Sector] -> Map Sector (Set Tripulante) -> Bool 
+-- Proposito: Indica si el tripulante existe en algun Set de los sectores de la lista dada. 
+-- Eficiencia:O(s*(log K + log t)) 
+-- s # siendo s la longitud de la lista de sectores ya que se hace RE sobre la misma 
+-- * # por cada s de ss se hace: 
+-- log K # por lookupM sobre el map. 
+-- + o *?
+-- log t # belongS sobre el set siendo t la cantidad de tripulantes del set. 
+-- O(s*(log K + log t))
 alreadyExists t []     m = False 
 alreadyExists t (s:ss) m = case lookupM s m of
-                                Nothing  -> error"No existe el sector"
+                                Nothing  -> alreadyExists t ss m 
                                 Just set -> (belongsS t set) || alreadyExists t ss m  
 
 
 updatePar :: (Sector, Int) -> (Sector, Set Tripulante) -> (Sector, Int)
+-- Proposito: Dado dos pares, devueve el par con mayor numero. 
+-- Eficiencia: 1 # por sizeS sobre el set y comparar.  
 updatePar (s1,n) (s2,set) = if n > sizeS set 
                              then (s1,n)
-                             else (s2 , sizeS set) 
+                             else (s2, sizeS set) 
 
 -- Los tipos Tripulante, Rango y Sector son abstractos. Pero sabemos que son comparables (Ord, Eq) y que el tipo T ripulante
 -- posee esta función en su interfaz (la única que nos interesa):
@@ -204,3 +264,6 @@ updatePar (s1,n) (s2,set) = if n > sizeS set
 -- Tripulante, siendo S la cantidad de sectores:
 
 -- rango :: Tripulante -> Rango                      O(1)
+
+
+

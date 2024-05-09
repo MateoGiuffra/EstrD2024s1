@@ -1,11 +1,12 @@
 module TripulanteEnterprise (
                             Tripulante,
                             Rango,
+                            crearT,
                             rango)
                             where
 
-data Tripulante = T Rango     
-
+data Tripulante = T String Rango     
+               deriving Show
 instance Ord Tripulante where
      t <= t2 = rango t <= rango t2
 
@@ -15,4 +16,7 @@ instance Eq Tripulante where
 
 type Rango = Int
 rango :: Tripulante -> Rango 
-rango (T n) = n  
+rango (T _ n) = n  
+
+crearT :: String -> Rango -> Tripulante
+crearT s r = (T s r)

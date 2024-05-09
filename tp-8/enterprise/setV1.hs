@@ -6,9 +6,25 @@ module SetV1
         sizeS,
         removeS,
         unionS,
-        setToList)where 
+        setToList)where
+
+import TripulanteEnterprise
+t1 = crearT "T1" 20 
+t2 = crearT "T2" 20 
+t3 = crearT "T3" 220 
+t4 = crearT "T4" 203 
+t5 = crearT "T5" 10 
+
 data Set a = S [a] Int 
+        deriving Show
             -- elementos, cantidad de elementos
+
+
+
+set = addS t5 
+        $ addS t4
+        $ addS t2 
+        $ addS t4 emptyS
 
 -- O(1) ya que se usa el constructor de Set 
 emptyS :: Set a
@@ -19,8 +35,8 @@ emptyS = S [] 0
 addS :: Eq a => a -> Set a -> Set a
 -- Dados un elemento y un conjunto, agrega el elemento al conjunto. 
 addS e (S xs n) = if elem e xs 
-                       then (S xs n)   
-                       else (S (e:xs) (n+1))
+                       then S xs n   
+                       else S (e:xs) (n+1)
 
 --O(n) # de costo n por elem, siendo n la longitud de xs en (S xs _)
 belongsS :: Eq a => a -> Set a -> Bool

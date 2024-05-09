@@ -10,6 +10,12 @@ module MaxHeap(
 data MaxHeap a = EmptyH | NodeH a (MaxHeap a) (MaxHeap a) 
             deriving (Show)
 
+heap = insertH 20 
+       $ insertH 23
+       $ insertH 43
+       $ insertH 12
+       $ insertH 123 emptyH
+
 -- emptyH :: MaxHeap a                              O(1)
 emptyH :: MaxHeap a
 emptyH = EmptyH
