@@ -23,11 +23,11 @@ data Nave = N (Map SectorId Sector) (Map Nombre Tripulante) (MaxHeap Tripulante)
             * Los tripulantes de mh tienen que existir y ser los MISMOS en m2 y viceversa. 
             * En m1, por cada sectorId que este asociado a un tripulante "x", tiene que aparecer 
               como sectorId en el set de SectorId de "x".
-            * En m2, por cada Tripulante que este asociado a un SectorId "x", tiene que aparecer 
-              como Tripulante en el conjunto de Tripulantes de "x".
-            * Cada s de m1 tiene que estar asociado a un solo sid, el cual es univoco en la nave.
-            * Cada tri de m2 tiene que estar asociado a un solo nombre, el cual es univoco en la nave o en m2? 
-            * Los tripulantes asignados de los sectores de m1 tienen que existir en m2 y en mh.
+            * En m2, por cada Tripulante que tenga asociado un SectorId "x", tiene que aparecer 
+              como Tripulante en el conjunto de Tripulantes de ese SectorId "x".
+            * Cada s de m1 tiene que tener el mismo SectorId con el que esta asociado. 
+            * Cada tri de m2 tiene que tener el mismo nombre con el que esta asociado. 
+            * Los tripulantes asignados de los sectores de m1 tienen que existir y ser los MISMOS que en m2 y en mh.
 
             OBSERVACIONES: 
             Un sector está vacío cuando no tiene tripulantes, y la nave está vacía si no tiene ningún tripulante.
