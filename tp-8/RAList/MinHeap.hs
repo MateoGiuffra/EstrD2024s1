@@ -2,9 +2,9 @@ module MinHeap (
     MinHeap,
     emptyH,
     isEmptyH,
-    findMinH,
+    findMin,
     insertH,
-    deleteMinH
+    deleteMin
 ) where
 
 data MinHeap a = EmptyH | NodeH a Int (MinHeap a) (MinHeap a) deriving (Show, Eq)
@@ -19,18 +19,18 @@ isEmptyH EmptyH = True
 isEmptyH _      = False
 
 -- | Encuentra el mínimo elemento en el heap
-findMinH :: MinHeap a -> Maybe a
-findMinH EmptyH          = Nothing
-findMinH (NodeH x _ _ _) = Just x
+findMin :: MinHeap a ->  a
+findMin EmptyH          = error"no hay"
+findMin (NodeH x _ _ _) = x
 
 -- | Inserta un elemento en el heap
 insertH :: Ord a => a -> MinHeap a -> MinHeap a
 insertH x heap = mergeH (NodeH x 1 EmptyH EmptyH) heap
 
 -- | Elimina el mínimo elemento del heap
-deleteMinH :: Ord a => MinHeap a -> MinHeap a
-deleteMinH EmptyH          = EmptyH
-deleteMinH (NodeH _ _ l r) = mergeH l r
+deleteMin :: Ord a => MinHeap a -> MinHeap a
+deleteMin EmptyH          = EmptyH
+deleteMin (NodeH _ _ l r) = mergeH l r
 
 -- | Combina dos heaps en uno
 mergeH :: Ord a => MinHeap a -> MinHeap a -> MinHeap a
