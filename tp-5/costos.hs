@@ -135,6 +135,12 @@ ordenar :: Ord a => [a] -> [a]
 ordenar [] = []
 orderar xs = let m = minimo xs in m : ordenar (sacar m xs)
 
+borrar :: Eq a => a -> [a] -> [a]
+borrar _ [] = []
+borrar x (y:ys) = if x == y then ys else x : borrar x ys
+
+
+
 {- INV. REPRESENTACION: 
 
 * No poner cosas incomprobables. 
@@ -146,7 +152,3 @@ orderar xs = let m = minimo xs in m : ordenar (sacar m xs)
 * Son propiedades que cumple nuestro dato
 
 -}
-
-borrar :: Eq a => a -> [a] -> [a]
-borrar _ [] = []
-borrar x (y:ys) = if x == y then ys else x : borrar x ys
