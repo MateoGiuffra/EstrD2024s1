@@ -198,7 +198,6 @@ asignarSectorA :: SectorId -> Nombre -> Map Nombre Tripulante -> Map Nombre Trip
 -- Log S # por asignarS siendo S la cantidad de sectores
 -- O(Log T + Log T + Log S)
 -- O(Log T + Log S)
-
 asignarSectorA sid n m = case lookupM n m of
                           Nothing -> error "No existe"
                           Just  t -> assocM n (asignarS sid t) m 

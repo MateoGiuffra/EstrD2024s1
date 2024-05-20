@@ -28,7 +28,8 @@ data RAList a = MkR Int (Map Int a) (MinHeap a)
         * El ultimo mi del map tiene que ser igual a i-1.
 -}
 
-ral = add "E" 
+ral = add "F" 
+      $ add "E" 
       $ add "D" 
       $ add "C" 
       $ add "B" 
@@ -102,10 +103,10 @@ remove :: Ord a => RAList a -> RAList a
 -- Eficiencia: O(N log N).
 -- log K + H * Log H # por eliminarElemento, pero como el map y el heap tienen la misma cantidad de elementos, entonces K y H son N
 -- quedaria: log N + N log N 
--- N log N # porque es de mayor costo 
+-- N log N # porque es de mayor costo.
 remove (MkR n m h) = if n == 0 
                         then error"La RAL no puede estar vacia"
-                        else let (m',h') = eliminarElemento n m h in 
+                        else let (m',h') = eliminarElemento (n-1) m h in 
                              MkR (n-1) m' h' 
 
 eliminarElemento :: Ord a => Int -> Map Int a -> MinHeap a -> (Map Int a, MinHeap a)
@@ -113,12 +114,12 @@ eliminarElemento :: Ord a => Int -> Map Int a -> MinHeap a -> (Map Int a, MinHea
 -- EFICIENCIA: O(log K + H * Log H)
 -- log K # por lookupM siendo K la cantidad de elementos del map. 
 -- + 
--- log K #por deleteM sobre el map. 
+-- log K # por deleteM sobre el map. 
 -- + 
 -- H * Log H # por borrarElemH sobre el heap, siendo H su cantidad de elementos.
 -- log K + log K + H * Log H 
 -- 2log K + H * Log H  # por agrupacion de terminos semejantes. 
--- log K + H * Log H 
+-- log K + (H * Log H)   
 eliminarElemento n map heap = case lookupM n map of
                                     Nothing -> (map,heap)
                                     Just a  -> (deleteM n map, borrarElemH a heap)  
@@ -127,12 +128,12 @@ borrarElemH :: Ord a => a -> MinHeap a -> MinHeap a
 -- PROPOSITO: Borra el elemento dado del heap. 
 -- EFICIENCIA: O(H * Log H)
 -- O(H # siendo H la cantidad de elementos del Heap, ya que se hace RE sobre la misma. 
--- *   # por cada h del heap se hace:  
+-- *   # por cada a del heap se hace:  
 --(1   # findMin sobre el heap 
 -- +
--- log H 
+-- log H # por insertH
 -- + 
--- log H insertH y deleteMin sobre el heap, ambos del mismo costo 
+-- log H # por deleteMin sobre el heap
 -- )
 -- O(H * (1 + Log H + Log H))
 -- O(H * (1 + 2Log H)) # por agrupacion de terminos semejantes. 
@@ -197,18 +198,54 @@ addAt :: Ord a => Int -> a -> RAList a -> RAList a
 -- Eficiencia: O(N log N).
 -- Sugerencia: definir una subtarea que corra los elementos del Map en una posición a partir de una posición dada. Pasar
 -- también como argumento la máxima posición posible
-addAt i a (MkR n map h) = MkR (n+1) (g n i a map) (insertH a h)
+-- EFICIENCIA:  
+-- K(Log K) # por agregarYDesplazar sobre el map, como K es N ya que N es la cantidad de elementos del map, quedaria:
+-- N log N 
+-- + 
+-- log N   # por insertH sobre el heap.   
+-- log N + N Log N 
+-- N Log N # porque N Log N es mas costoso. 
+addAt i a (MkR n map h) = MkR (n+1) (agregarYDesplazar n i a map) (insertH a h)
 
-g :: Int -> Int -> a -> Map Int a -> Map Int a 
-g mx n a map = if n > mx || n < 0
-                then error"g"
-                else (assocM n a (case lookupM n map of
-                                    Nothing -> map 
-                                    Just x  -> assocM  (n+1) x( g mx (n+1) a map))) 
+agregarYDesplazar :: Int -> Int -> a -> Map Int a -> Map Int a 
+-- PROPOSITO: Agrega el elemento dado en el indice dado y desplaza todos los indices despues de ese. 
+-- Precondición: el índice debe estar entre 0 y la longitud de la lista.
+-- EFICIENCIA: K(Log K)  
+-- K       # siendo K la cantidad de elementos del map, ya que se hace RE sobre la misma. 
+-- *       # por cada Int del map se hace:  
+-- ( log K # por assocM sobre la RE.
+-- + 
+-- ( log K # por lookupM sobre el map.
+-- K*(log K + log K)
+-- K*(2log K )         # por agrupacion de terminos semejantes. 
+-- K(Log K)            # porque no importa la constante 2. 
+agregarYDesplazar mx n a map = if n > mx || n < 0
+                                then error "El índice debe estar entre 0 y la longitud de la lista."
+                                else (assocM n a (case lookupM n map of
+                                      Nothing -> map 
+                                      Just x  -> assocM (n+1) x (agregarYDesplazar mx (n+1) a map))) 
+                                
+
+
+
+-- else (assocM n a (desplazar (lookupM n map) n map))
+desplazar :: Maybe a -> Int  -> Map Int a -> Map Int a 
+desplazar Nothing _  m = m 
+desplazar (Just a) n m = assocM (n+1) a m 
 
 -- ==============================================================================================================================================================================
 --                  Anexo de interfaces                 Anexo de interfaces                 Anexo de interfaces
 -- ==============================================================================================================================================================================
+
+
+-- La interfaz de Map, siendo K la cantidad de claves distintas en el map:
+
+-- emptyM :: Map k v                                O(1)
+-- assocM :: Ord k => k -> v -> Map k v -> Map k v  O(log K)
+-- lookupM :: Ord k => Map k v -> k -> Maybe v      O(log K)
+-- deleteM :: Ord k => k ->Map k v -> Map k v       O(log K)
+-- keysM :: Map k v -> [k]                           O(K)
+
 
 -- La interfaz de Heap, siendo H la cantidad de elementos en la heap:
 
@@ -218,10 +255,3 @@ g mx n a map = if n > mx || n < 0
 -- insertH :: Ord a => a -> Heap a -> Heap a        O(log H)
 -- deleteMin :: Ord a => Heap a -> Heap a           O(log H)
 
--- La interfaz de Map, siendo K la cantidad de claves distintas en el map:
-
--- emptyM :: Map k v                                O(1)
--- assocM :: Ord k => k -> v -> Map k v -> Map k v  O(log K)
--- lookupM :: Ord k => Map k v -> k -> Maybe v      O(log K)
--- deleteM :: Ord k => k ->Map k v -> Map k v       O(log K)
--- domM :: Map k v -> [k]                           O(K)
