@@ -52,7 +52,7 @@ type Variable = String
 type Valor = String
 type Evidencia = Map.Map Variable Valor
 
-data SistemaInferenciaProbabilistico = SIP (Set.Set Variable) (Map.Map Variable (Set.Set Variable)) (Map.Map Variable (Map.Map Valor Double))
+data SistemaInferenciaProbabilistico = SIP (Set Variable) (Map Variable (Set Variable)) (Map Variable (Map Valor Double))
     deriving (Show, Eq)
 
 -- Construcción del TAD con invariantes:

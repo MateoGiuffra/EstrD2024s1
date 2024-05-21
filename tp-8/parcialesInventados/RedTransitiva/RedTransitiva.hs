@@ -36,10 +36,10 @@ import SetV1
 import MapV1
 
 type Elemento = Int
-type Conexiones = Set.Set Elemento
-type Componentes = Map.Map Elemento Conexiones
+type Conexiones = Set Elemento
+type Componentes = Map Elemento Conexiones
 
-data RedTransitiva = RT (Set.Set Elemento) (Map.Map Elemento Conexiones) (Map.Map Elemento Conexiones)
+data RedTransitiva = RT (Set Elemento) (Map Elemento Conexiones) (Map Elemento Conexiones)
     deriving (Show, Eq)
 
 nuevaRed :: RedTransitiva
