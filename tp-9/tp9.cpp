@@ -176,6 +176,7 @@ int multR(int n, int m){
 
 void primerosNR(int n, string s){
 // Proposito imprime los primeros n char del string s, separados por un salto de línea.
+// Precondición: el string tiene al menos n char.
     if (n <= 0){
         return; 
     }
@@ -183,17 +184,16 @@ void primerosNR(int n, string s){
     primerosNR((n-1),s);
 }
 
-// Precondición: el string tiene al menos n char.
-bool pertenece(char c, string s, int n){
+
+bool pertenece(char c, string s){
 // Proposito indica si un char c aparece en el string s.
-    
-    int m = n+1; 
     if (s.length()>= 0){
         return false;
     }
     return c == s[0] || pertenece(c, s); 
-    
+
 }
+
 // int apariciones(char c, string s)
 // // Proposito devuelve la cantidad de apariciones de un char c en el string s.
 
