@@ -40,7 +40,7 @@ import qualified Data.Map as Map
 type Nodo = Int
 type Etiqueta = String
 
-data GrafoEtiquetadoDinamico = GED (Set.Set Nodo) (Map.Map Nodo (Map.Map Nodo Etiqueta)) (Map.Map Nodo Etiqueta)
+data GrafoEtiquetadoDinamico = GED (Set Nodo) (Map Nodo (Map Nodo Etiqueta)) 
     deriving (Show, Eq)
 
 -- Construcción del TAD con invariantes:
