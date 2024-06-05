@@ -185,14 +185,14 @@ void primerosNR(int n, string s){
 }
 
 
-bool pertenece(char c, string s){
-// Proposito indica si un char c aparece en el string s.
-    if (s.length()>= 0){
-        return false;
-    }
-    return c == s[0] || pertenece(c, s); 
+// bool pertenece(char c, string s){
+// // Proposito indica si un char c aparece en el string s.
+//     if (s.length()>= 0){
+//         return false;
+//     }
+//     return c == s[0] || pertenece(c, s); 
 
-}
+// }
 
 // int apariciones(char c, string s)
 // // Proposito devuelve la cantidad de apariciones de un char c en el string s.

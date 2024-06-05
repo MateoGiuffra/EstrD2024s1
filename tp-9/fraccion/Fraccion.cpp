@@ -48,13 +48,13 @@ int minimoDivisorComun(int n, int m){
 
 
 Fraccion simplificada(Fraccion p){                       
-// Propósito: devuelve una fracción que resulta
-// de simplificar la dada por parámetro
+// Propósito: devuelve una fracción que resulta de simplificar la dada por parámetro
         Fraccion f; 
         int m =  p.numerador; 
         int n =  p.denominador;
         int d = minimoDivisorComun(m,n);
-        while (!(n == 1) && n % d == 0 && m % d == 0){
+                            // si se puede seguir dividiendo a los dos
+        while (n != 1 && (n % d == 0 && m % d == 0)){
             int d = minimoDivisorComun(m,n);
             m = m/d;
             n = n/d;
@@ -64,7 +64,6 @@ Fraccion simplificada(Fraccion p){
         
         return f;     
 }
-
 
 
 int mcmDe(int n, int m){
@@ -77,6 +76,7 @@ int mcmDe(int n, int m){
 
 Fraccion sumF(Fraccion f1, Fraccion f2){
 // Propósito: devuelve la primera componente
+
     Fraccion f; 
     if (f1.denominador == f2.denominador){
         f.numerador   = f1.numerador + f2.numerador; 
@@ -95,6 +95,8 @@ int main(){
     Fraccion f1 = consFraccion(9,150);
     Fraccion f2 = consFraccion(15,2);
     Fraccion f  = simplificada(f1);
-    cout << numerador(f) << "  " << denominador(f) <<endl;  
-
+    cout << "El numerador es: " << numerador(f) << "  y el denominador es: " << denominador(f) <<endl;  
+    cout << " " << numerador(f) << endl;
+    cout << " -- " << endl; 
+    cout << " " << denominador(f) << endl;
 }
