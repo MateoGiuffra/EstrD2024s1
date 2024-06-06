@@ -80,7 +80,8 @@ int main() {
     cout << "La energia del Charmander es de "<<energia(charmander) << endl; // ahora deberia de tener 70
 
     //seccion Entrenador test
-    // SetUp:
+    // SetUp:               
+                                                //Indices
     Pokemon Charmander = consPokemon("Fuego");  // 0
     Pokemon Cloyster   = consPokemon("Agua");   // 1
     Pokemon Bulbasaur  = consPokemon("Planta"); // 2
