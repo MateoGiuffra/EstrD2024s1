@@ -25,17 +25,17 @@ bool superaA(Pokemon p1, Pokemon p2){
     return (p1->tipo == "Agua" && p2->tipo == "Fuego" ) || (p1->tipo == "Fuego" && p2->tipo == "Planta" ) || (p1->tipo == "Planta" && p2->tipo == "Agua");    
 }
 
-
-int main(){
-    Pokemon charmander = consPokemon("Fuego");
-    Pokemon poliwag = consPokemon("Agua");
-    cout << "¿Este pokemon de tipo: " << tipoDePokemon(charmander) << " es mas fuerte que el pokemon de tipo " << tipoDePokemon(poliwag) <<
-     "? Respuesta: "  << superaA(poliwag, charmander) <<endl; // true por ende 1.
-    cout << "¿Este pokemon de tipo: " << tipoDePokemon(charmander) << " es mas fuerte que el pokemon de tipo " << tipoDePokemon(poliwag) <<
-     "? Respuesta: "  << superaA(charmander, poliwag) <<endl; // falso por ende 0.
-    cout << "La energia del Charmander es de " << energia(charmander) << ", pero luego de un intercambio con otro Pokemon, recibio tres golpes de 10 de damage, por ende ahora " << endl; 
-    perderEnergia(10, charmander);
-    perderEnergia(10, charmander);
-    perderEnergia(10, charmander);
-    cout << "La energia del Charmander es de "<<energia(charmander) << endl; // ahora deberia de tener 70
-}
+// comento el main pero lo paso a Entrenador porque si tengo dos main al hacer imports se me rompe 
+// int main(){
+//     Pokemon charmander = consPokemon("Fuego");
+//     Pokemon poliwag = consPokemon("Agua");
+//     cout << "¿Este pokemon de tipo: " << tipoDePokemon(charmander) << " es mas fuerte que el pokemon de tipo " << tipoDePokemon(poliwag) <<
+//      "? Respuesta: "  << superaA(poliwag, charmander) <<endl; // true por ende 1.
+//     cout << "¿Este pokemon de tipo: " << tipoDePokemon(charmander) << " es mas fuerte que el pokemon de tipo " << tipoDePokemon(poliwag) <<
+//      "? Respuesta: "  << superaA(charmander, poliwag) <<endl; // falso por ende 0.
+//     cout << "La energia del Charmander es de " << energia(charmander) << ", pero luego de un intercambio con otro Pokemon, recibio tres golpes de 10 de damage, por ende ahora " << endl; 
+//     perderEnergia(10, charmander);
+//     perderEnergia(10, charmander);
+//     perderEnergia(10, charmander);
+//     cout << "La energia del Charmander es de "<<energia(charmander) << endl; // ahora deberia de tener 70
+// }

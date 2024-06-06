@@ -1,5 +1,9 @@
-#include<iostream>
+#ifndef ENTRENADOR_H
+#define ENTRENADOR_H
+
 #include <string>
+#include "Pokemon.h"
+
 using namespace std;
 
 struct EntrenadorSt {
@@ -9,6 +13,8 @@ struct EntrenadorSt {
 };
 
 typedef EntrenadorSt* Entrenador;
+
+bool esteLeGanaATodos(TipoDePokemon tipo, Entrenador e);
 
 Entrenador consEntrenador(string nombre, int cantidad, Pokemon* pokemon);
 // Dado un nombre, una cantidad de pokémon, y un array de pokémon de ese tamaño, devuelve
@@ -25,3 +31,6 @@ Pokemon pokemonNro(int i, Entrenador e);
 bool leGanaATodos(Entrenador e1, Entrenador e2);
 // Dados dos entrenadores, indica si, para cada pokémon del segundo entrenador, el primero
 // posee al menos un pokémon que le gane.
+
+#endif // ENTRENADOR_H
+
