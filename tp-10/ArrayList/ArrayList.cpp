@@ -34,8 +34,9 @@ int get(int i, ArrayList xs){
     if  (i>=0 && i < xs->cantidad){
         return xs->elementos[i];
     }
-    cout << "Indice invalido."<<endl;
-    //exit(1); 
+    return 0;
+    cout << "Indice invalido"<<endl;
+    exit(1); 
 }
 void set(int i, int x, ArrayList xs){
 // Reemplaza el _ elemento por otro dado.
@@ -49,20 +50,21 @@ void resize(int capacidad, ArrayList xs){
         int* resizeList = new int[capacidad]; 
         if(xs->capacidad <= capacidad){
             //incrementar 
-            for (int i =0; i < xs->cantidad; i++){
+            for (int i =0; i <= xs->cantidad; i++){
                 resizeList[i] = xs->elementos[i];
             }//la cantidad queda igual
         }else{
             //decrementar 
             int cantidadNueva = xs->cantidad < capacidad ? xs->cantidad : capacidad;  //el minimo entre la capacidad y la cantidad de elementos. 
-            for (int i =0; i < cantidadNueva; i++){
+            for (int i =0; i <= cantidadNueva; i++){
                 resizeList[i] = xs->elementos[i];
             }
             xs->cantidad  = cantidadNueva;
         }
+        delete[] xs->elementos;
         xs->capacidad = capacidad;      // cargas nueva capacidad
         xs->elementos = resizeList;     // cargas la lista hasta la capacidad disponible
-        delete[] xs->elementos;
+        
 
 }
 
@@ -91,37 +93,3 @@ void remove(ArrayList xs){
     
 }
 
-
-int main(){
-    ArrayList arrayTest = newArrayList();
-    cout<< lengthAL(arrayTest) << endl; // deberia de dar 0  | True
-    add(100,arrayTest);
-    add(150,arrayTest);
-    add(200,arrayTest);
-    cout<< lengthAL(arrayTest) << endl; // deberia de dar 3  | True
-    cout<< lengthAL(arrayTest) << endl; // deberia de dar 2  | True
-    
-    cout << "El indice 0 vale:" <<get(0,arrayTest) <<endl;    // deberia de dar 100
-    cout << "El indice 1 vale:" <<get(1,arrayTest) <<endl;    // deberia de dar 150
-    cout << "El indice 2 vale:" <<get(2,arrayTest) <<endl;    // deberia de dar 200
-    // cout << "El indice 3 vale:" <<get(3,arrayTest) <<endl;    // no deberia de dar nada, porque solo se agregaron 3 elementos. 
-    remove(arrayTest);
-    cout << "Despues de borrar el ultimo elemento del ArrayList quedaria:" <<endl; 
-    cout << "El indice 0 vale:" <<get(0,arrayTest) <<endl;    // deberia de dar 100
-    cout << "El indice 1 vale:" <<get(1,arrayTest) <<endl;    // deberia de dar 150
-    cout << "El indice 2 vale:" <<get(2,arrayTest) <<endl;    // no deberia de dar nada, porque se borro el ultimo elemento. 
-    //cout << "El indice 3 vale:" <<get(3,arrayTest) <<endl;    // no deberia de dar nada, porque solo hay 2. 
-
-    cout << "Se agregan los elementos 200, 250, 300 al ArrayList." <<endl;
-    add(200,arrayTest);
-    add(250,arrayTest);
-    add(300,arrayTest);
-    cout<< "por ende esto deberia de ser cierto 5 == " << lengthAL(arrayTest) <<endl; 
-    cout << "La capacidad del arrayTest es de: " << arrayTest->capacidad << "." << endl;  
-    resize(2,arrayTest); 
-    cout << "Despues de un resize a 2, la capacidad es de: " << arrayTest->capacidad << "." << endl;
-    cout << "Y no deberia de mostrarme que hay en el indice 4: " << get(4,arrayTest) << " Pero si del 1: " << get(1,arrayTest) <<endl; 
-
-    
-
-}
