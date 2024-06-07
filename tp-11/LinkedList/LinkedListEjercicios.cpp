@@ -144,8 +144,8 @@ int main(){
     cout<<"La sumatoria de xs es: " << sumatoria(xs)<<endl; 
  
     //booleanos 
-    cout<<"Existe 100 en xs? Respuesta: " << pertenece(100,xs) <<endl;
-    cout<<"Existe 99 en xs? Respuesta: " << pertenece(99,xs) <<endl;
+    cout<<"Existe 100 en xs? Respuesta: 1 == " << pertenece(100,xs) <<endl;
+    cout<<"Existe 99 en xs? Respuesta: 0 == " << pertenece(99,xs) <<endl;
  
     //minimo
     cout<< "El minimo de xs es 10 == " << minimo(xs) <<endl; 
