@@ -92,8 +92,8 @@ void MergeQ(Queue q1, Queue q2) {
     q1->cantidad += q2->cantidad; 
     
     // asi se vacia o con Destroy? pasa que no seria de costo 1 
-    q2->primero = nullptr;
-    q2->ultimo = nullptr;
+    q2->primero = NULL;
+    q2->ultimo  = NULL;
     q2->cantidad = 0;
 }
 
