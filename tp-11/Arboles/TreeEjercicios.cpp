@@ -51,48 +51,47 @@ int heightT(Tree t) {
     return -1;
 }
 
-ArrayList toList(Tree t) {
-    ArrayList list = newArrayList();
+ArrayList toList(Tree t){
+    
+    ArrayList array = newArrayList(); 
     if (!isEmptyT(t)){
-        list = append(newArrayListWith(rootT(t)), append(toList(left(t)), toList(right(t))));
+        add(rootT(t),array);
+        array = append(array,(append(toList(left(t)), (toList(right(t)))))); 
     }
-    return list;
+    return array; 
+
 }
 
-// Devuelve una lista con todos los elementos del árbol
-// ArrayList toList(Tree t) {
-//     ArrayList list = newArrayList();
-//     if (!isEmptyT(t)){
-//         add(rootT(t), append(toList(left(t)), toList(right(t))));
+// Devuelve una lista con los elementos de las hojas del árbol
+// ArrayList leaves(Tree t) {
+//     ArrayList hojas = newArrayList(); 
+//     if(!isEmptyT(t)){
+//         if (isEmptyT(left(t)) && isEmptyT(right(t))  ){
+//             add(rootT(t),hojas); 
+//             hojas =  append(hojas,(append(leaves(left(t)),leaves(right(t)))));
+//         }
 //     }
-//     return list;
-// }
-
-
-
-// // Devuelve una lista con los elementos de las hojas del árbol
-// ArrayListLeaves(Tree t) {
-//     // Implementación pendiente
+//     return hojas;
 // }
 
 // // Devuelve una lista con los nodos de nivel n
 // ArrayList levelN(int n, Tree t) {
 //     // Implementación pendiente
 // }
-//para que compile: g++ -o programa ArrayListEjercicios.cpp ArrayList.cpp TreeEjercicios.cpp Tree.cpp -std=c++11
 
-int main(){
+int main() {
     Tree leftSubtree = nodeT(100, emptyT(), emptyT());
     Tree rightSubtree = nodeT(200, emptyT(), emptyT());
     Tree t = nodeT(10, leftSubtree, rightSubtree);
     
     cout << "Sum of elements: " << sumarT(t) << endl;
-    cout << "Size of 3 elements tree is of : " << sizeT(t) << endl;
-    cout << "10 belongs in Tree 1 : " << perteneceT(10,t) << endl;
-    cout << "Appareances of 10 are 1: " << aparicionesT(10,t) << endl;
-    cout << "Height of Tree is 1: " << heightT(t) << endl;
-    ArrayList arrayt =  toList(t);
-    cout << sumatoria(arrayt ) <<endl;
+    cout << "Size of tree: " << sizeT(t) << endl;
+    cout << "10 belongs in Tree: " << perteneceT(10, t) << endl;
+    cout << "Appearances of 10: " << aparicionesT(10, t) << endl;
+    cout << "Height of Tree: " << heightT(t) << endl;
+
+    ArrayList arrayt = toList(t);
+    cout << "Sum of elements in list: " << sumatoria(arrayt) << endl;
 
     return 0;
 }
