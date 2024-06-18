@@ -61,6 +61,21 @@ ArrayList toList(Tree t){
     return array; 
 
 }
+ArrayList preorderT(Tree t) {
+    if (isEmptyT(t)) {
+        return newArrayList();
+    } else {
+        ArrayList xs = newArrayList();
+        add(rootT(t), xs);
+        ArrayList leftList = preorderT(left(t));
+        ArrayList rightList = preorderT(right(t));
+        xs = append(xs, leftList);
+        xs = append(xs, rightList);
+        return xs;
+    }
+}
+
+
 
 // Devuelve una lista con los elementos de las hojas del árbol
 // ArrayList leaves(Tree t) {

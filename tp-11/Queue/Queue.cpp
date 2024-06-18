@@ -100,15 +100,12 @@ void MergeQ(Queue q1, Queue q2) {
 // Libera la memoria ocupada por la lista.
 // Costo: O(n).
 void DestroyQ(Queue q) {
-    while(!isEmptyQ(q)){
-        delete firstQ(q);
-        Dequeue;
-    }
+    return;
 }
 
 
 int main(){
-    Queue q = emptyQ();
+    Queue q = emptyQ(); 
     Enqueue(10,q);
     Enqueue(20,q);
     Enqueue(30,q);
