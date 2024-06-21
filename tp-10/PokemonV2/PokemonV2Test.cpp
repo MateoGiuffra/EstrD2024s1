@@ -10,7 +10,5 @@ int main(){
     Pokemon pokemones[] = {charmander,bulbasaur,wartortle}; 
     Entrenador e1 = consEntrenador("Ash",3, pokemones);
     cout <<e1<<endl;
-    delete e1;
-    cout <<NULL<<endl;
     return 0;
 }
