@@ -145,6 +145,12 @@ arbol2 :: Tree Int
 arbol2 = (NodeT 1 (NodeT 2 (NodeT 4 EmptyT EmptyT)(NodeT 6 (NodeT 8 EmptyT EmptyT) EmptyT)) (NodeT 3 (NodeT 5 EmptyT EmptyT) (NodeT 7 EmptyT EmptyT)))
 -- (8,6,4,2,1,3,5,7)
 
+arbol3 :: Tree Int 
+arbol3 = (NodeT 2 (NodeT 4 EmptyT EmptyT) (NodeT 6 EmptyT EmptyT))
+
+arbol4 :: Tree Int 
+arbol4 = (NodeT 2 (NodeT 4 EmptyT EmptyT) (NodeT 6 (NodeT 8 EmptyT EmptyT) EmptyT))
+
 --1.a) 
 sumarT :: Tree Int -> Int
 -- Dado un árbol binario de enteros devuelve la suma entre sus elementos.
@@ -218,10 +224,10 @@ levelN :: Int -> Tree a -> [a]
 -- distancia de la raiz a uno de sus hijos es 1.
 -- Nota: El primer nivel de un árbol (su raíz) es 0.
 levelN _ EmptyT             = []
-levelN 0 (NodeT x izq der ) = x : (levelN (-1) izq ++ levelN (-1) der ) 
+levelN 0 (NodeT x izq der ) = x : (levelN (-1) izq ++ levelN (-1) der) 
 levelN n (NodeT x izq der ) = if n < 0  
                                  then [] 
-                                 else (levelN (n-1) izq ++ levelN (n-1) der )  
+                                 else levelN (n-1) izq ++ levelN (n-1) der
 --1.l)                                  
 listPerLevel :: Tree a -> [[a]]
 -- Dado un árbol devuelve una lista de listas en la que cada elemento representa un nivel de dicho árbol.
