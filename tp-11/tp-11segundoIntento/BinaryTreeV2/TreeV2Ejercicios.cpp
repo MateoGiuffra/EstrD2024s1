@@ -28,6 +28,9 @@ int sumarT(Tree t){
     return res; 
 }
 
+
+
+
 int sizeT(Tree t){
 //Dado un árbol binario devuelve su cantidad de elementos, es decir, el tamaño del árbol (size en inglés).
     int size = 0; 
@@ -45,6 +48,7 @@ int sizeT(Tree t){
     return size; 
 }
 
+
 bool perteneceT(int e, Tree t){
 //Dados un elemento y un árbol binario devuelve True si existe un elemento igual a ese en el árbol.
     if (isEmptyT(t)) return false; 
@@ -58,7 +62,7 @@ bool perteneceT(int e, Tree t){
         agregarSiNoEsNull(right(current),porProcesar);
     }
     return !isEmpty(porProcesar);
-     DestroyL(porProcesar);
+    DestroyL(porProcesar);
 }
 int aparicionesT(int e, Tree t){
 //Dados un elemento e y un árbol binario devuelve la cantidad de elementos del árbol que son iguales a e.
@@ -76,6 +80,7 @@ int aparicionesT(int e, Tree t){
     DestroyL(porProcesar);
     return apariciones; 
 }
+
 int heightT(Tree t){
 //Dado un árbol devuelve su altura.
     if(isEmptyT(t)) return 0; 
@@ -167,6 +172,10 @@ void imprimir(LinkedList xs){
     DisposeIterator(i);
 
 }
+
+
+
+
 
 int main(){
     Tree t = nodeT (2, 

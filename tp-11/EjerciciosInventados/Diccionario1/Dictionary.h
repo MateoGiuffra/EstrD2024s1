@@ -2,12 +2,13 @@
 #define DICTIONARY_H
 
 #include <cstddef> // Para NULL
-
+#include <string>
 struct DictionaryStruct {
-    char** keys; // Array de cadenas de caracteres para las claves
+    char** keys;  // Array de cadenas de caracteres para las claves
     int* values; // Array de enteros para los valores
     int maxSize; // Capacidad máxima del diccionario
-    int size;    // Tamaño actual del diccionario
+    int size;    // Tamaño actual del 
+    
 };
 
 typedef DictionaryStruct* Dictionary;

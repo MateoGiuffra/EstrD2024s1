@@ -132,5 +132,8 @@ int main(){
     cout <<  get(d,"Clave que esta asociada a 200") << endl;
     cout <<  contains(d,"Clave que esta asociada a 200") << endl;
     cout <<  contains(d,"Clave que esta asociada a 300") << endl;
+    removeKey(d,"Clave que esta asociada a 200");
+    cout <<  get(d,"Clave que esta asociada a 200") << endl;
+
     return 0;
 }
