@@ -3,6 +3,10 @@
 #include <stdexcept>
 using namespace std; 
 
+// ================================================================================================================================================================================================
+// IMPLEMENTACION              IMPLEMENTACION              IMPLEMENTACION              IMPLEMENTACION              IMPLEMENTACION 
+// ================================================================================================================================================================================================
+
 struct ArrayListSt {
 /*INV.REP: 
     * cantidad de ser la cantidad de elementos que posee la estructura.
@@ -14,9 +18,7 @@ int* elementos; // array de elementos
 int capacidad; // tamaño del array
 };
 
-// ================================================================================================================================================================================================
-// IMPLEMENTACION              IMPLEMENTACION              IMPLEMENTACION              IMPLEMENTACION              IMPLEMENTACION 
-// ================================================================================================================================================================================================
+
 
 ArrayList newArrayList(){
 // Crea una lista con 0 elementos.
@@ -108,22 +110,26 @@ int main(){
     cout << get(0,xs) <<endl; 
     cout << get(1,xs) <<endl; 
     cout << get(2,xs) <<endl; 
-
+    cout << "Este array posee 3 elementos: " << endl; 
     imprimirArray(xs);
 
     remove(xs); //borre el 30
+    cout << "Se removio el ultimo elemento, entonces el array queda: " << endl; 
     imprimirArray(xs);
 
 
     remove(xs); //borre el 20
+    cout << "Se removio el ultimo elemento, entonces el array queda: " << endl; 
     imprimirArray(xs);
 
     
     remove(xs); //borre el 10
+    cout << "Se removio el ultimo elemento, entonces el array queda: " << endl; 
     imprimirArray(xs);
         
     
-    remove(xs); //borre una lista vacia
+    remove(xs); //borre una lista 
+    cout << "Se removio el ultimo elemento, entonces el array queda: " << endl; 
     imprimirArray(xs);
 
     add(10,xs);
@@ -132,16 +138,18 @@ int main(){
     add(40,xs);
     add(50,xs);
     add(60,xs);
-    cout << xs->capacidad <<endl; 
-    cout << xs->cantidad<<endl; 
-    
-    get(6,xs);
+    cout << "Se agregaronr 6 elementos al array, cuya capacidad era de 4, entonces ahora:  " << endl; 
+    cout << "  * Su cantidad es " << xs->cantidad<<endl; 
+    cout << "  * Su capacidad es " << xs->capacidad <<" ya que se duplico debido a que se agregaron mas elementos que su capacidad(4)." << endl; 
+    cout << "El primer elemento seria: " << get(0,xs) <<endl; 
+    cout << "El ultimo elemento seria el de la posicion 5: "<<  get(5,xs) << endl; 
     
     resize(3,xs);
-    cout << xs->capacidad <<endl; 
-    cout << xs->cantidad<<endl; 
+    cout << "Despues de un resize, limitando la capacidad a 3, se pregunta de nuevo su:" <<endl; 
+    cout << "  * Capacidad: "<< xs->capacidad <<endl;
+    cout << "  * Cantidad:  " << xs->cantidad<<endl; 
     // get(6,xs); //resultado: terminate called after throwing an instance of 'std::runtime_error' what():  Numero fuera de rango
-    cout << get(0,xs) <<endl; 
+    cout << "El elemento en la posicion 0 seguiria siendo el mismo: " << get(0,xs) <<endl; 
 
     return 0; 
-}
+} 

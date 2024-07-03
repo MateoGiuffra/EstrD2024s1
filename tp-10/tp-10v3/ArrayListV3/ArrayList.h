@@ -1,5 +1,5 @@
 struct ArrayListSt;
-typedef ArrayListSt* ArrayList;
+typedef ArrayListSt* ArrayList; // INV REP: El puntero no es NULL. (esto creo que deberia de ir en el cpp pero no me compila si no)
 // Definir la siguiente interfaz de este tipo de listas:
 ArrayList newArrayList();
 // Crea una lista con 0 elementos.
