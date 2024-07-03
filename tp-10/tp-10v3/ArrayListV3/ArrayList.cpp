@@ -15,7 +15,7 @@ int capacidad; // tamaño del array
 };
 
 // ================================================================================================================================================================================================
-// IMPLEMENTACION              IMPLEMENTACION              IMPLEMENTACION              IMPLEMENTACION              IMPLEMENTACION 
+// IMPLEMENTACION              IMPLEMENTACION              IMPLEMENTACION              IMPLEMENTACION              IMPLEMENTACION              IMPLEMENTACION              IMPLEMENTACION  
 // ================================================================================================================================================================================================
 
 ArrayList newArrayList(){
