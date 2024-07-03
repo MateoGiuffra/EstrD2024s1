@@ -412,3 +412,5 @@ asignadosPorTuplas p ((p1, n): ps) = if sonElMismoProy p p1
 
 sonElMismoProy :: Proyecto -> Proyecto -> Bool 
 sonElMismoProy p1 p2 = nombreDel p1 == nombreDel p2 
+
+

@@ -3,6 +3,7 @@
 #include "PersonaV2.h"
 using namespace std;
 
+
 PersonaV2 consPersona(string nombre, int edad){
 // Devuelve el nombre de una persona
     PersonaV2 p = new PersonaV2St; //va la tipo  y despues new y el puntero (tipoSt)
