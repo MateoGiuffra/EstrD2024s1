@@ -18,7 +18,9 @@ int* elementos; // array de elementos
 int capacidad; // tamaño del array
 };
 
-
+// ================================================================================================================================================================================================
+// IMPLEMENTACION              IMPLEMENTACION              IMPLEMENTACION              IMPLEMENTACION              IMPLEMENTACION              IMPLEMENTACION              IMPLEMENTACION  
+// ================================================================================================================================================================================================
 
 ArrayList newArrayList(){
 // Crea una lista con 0 elementos.
@@ -152,4 +154,4 @@ int main(){
     cout << "El elemento en la posicion 0 seguiria siendo el mismo: " << get(0,xs) <<endl; 
 
     return 0; 
-} 
+}
