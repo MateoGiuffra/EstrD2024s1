@@ -18,7 +18,7 @@ typedef DictionaryStruct* Dictionary;
 // Precondición: maxSize > 0
 // Propósito: Crear un diccionario vacío con capacidad para maxSize elementos
 // Eficiencia: O(1)
-Dictionary createDictionary(int maxSize);
+// Dictionry createDictionary(int maxSize);
 
 
 // Función para destruir el diccionario y liberar la memoria asignada
