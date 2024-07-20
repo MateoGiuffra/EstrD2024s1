@@ -139,4 +139,128 @@ void DestroyL(LinkedList xs) {
     delete xs; 
 }
 
+void reverse(LinkedList xs){
+    if (xs->cantidad > 1){
+        NodoL* ant = xs->primero; 
+        NodoL* cur = ant->siguiente; 
+        NodoL* next; 
+        while (cur != NULL){
+            next = cur->siguiente; 
+            cur->siguiente =  ant; 
+            ant = cur; 
+            cur = next; 
+        }
+        xs->ultimo = xs->primero; 
+        xs->primero = ant; 
+    }
+}
 
+LinkedList from(int* values, int size){
+    LinkedList xs = new LinkedListSt;
+    xs->primero = NULL; xs->ultimo = NULL; xs->cantidad = 0; 
+    if (size <= 0) return xs; 
+    for (int i = 0; i<size; i++){
+        NodoL* cur = new NodoL;
+        cur->elem = values[i];
+        cur->siguiente = NULL;
+        if (i == 0) {
+            xs->primero = cur;
+        } else {
+            xs->ultimo->siguiente = cur;
+        }
+        xs->ultimo = cur; 
+        xs->cantidad++; 
+    }
+    return xs; 
+}
+
+int* toArray(LinkedList xs){
+    if (xs->cantidad <= 0) return new int[0];
+    int* res   = new int[xs->cantidad];
+    NodoL* cur = xs->primero; 
+    for (int i = 0; i<xs->cantidad; i++){
+        res[i] = cur->elem; 
+        cur = cur->siguiente; 
+    }
+    return res; 
+}
+
+
+
+void imprimir(LinkedList xs) {
+    if (isEmpty(xs)) {
+        cout << "[]" << endl;
+
+    }
+    
+    ListIterator it = getIterator(xs);
+    cout << "[";
+    while (!atEnd(it)) {
+        cout << current(it);
+        Next(it);
+        if (!atEnd(it)) {
+            cout << ", ";
+        }
+    }
+    cout << "]" << endl;
+    DisposeIterator(it);
+}
+
+int main(){
+    LinkedList xs = nil();  
+    Cons(5,xs);
+    Cons(4,xs);
+    Cons(3,xs);
+    Cons(2,xs);
+    Cons(1,xs); // esto es igual a [3,2,1] == 3 : 2 : 1: [] 
+    int* res = toArray(xs);
+    cout << res[0] <<endl; //  1
+    int size = 5;
+    int* arr = new int[size];
+
+    // Inicialización del array
+    arr[0] = 10;
+    arr[1] = 20;
+    arr[2] = 30;
+    arr[3] = 40;
+    arr[4] = 50;
+    LinkedList ys = from(arr, size);
+    cout << head(ys) <<endl; 
+    // imprimir(ys);     
+
+    // cout << "Antes del reverse quedaria:" << endl; 
+    // cout << head(xs) <<endl; // 1
+    // Tail(xs); 
+    // cout << head(xs) <<endl; // 2
+    // Tail(xs); 
+    // cout << head(xs) <<endl; // 3
+    // Tail(xs); 
+    // cout << head(xs) <<endl; // 4
+    // Tail(xs); 
+    // cout << head(xs) <<endl; // 5
+    // Tail(xs); 
+
+    // Cons(5,xs);
+    // Cons(4,xs);
+    // Cons(3,xs);
+    // Cons(2,xs);
+    // Cons(1,xs); // esto es igual a [3,2,1] == 3 : 2 : 1: [] 
+    
+    // reverse(xs);
+    
+    // imprimir(xs);
+    
+    // cout << "Despues del reverse quedaria:" << endl; 
+    // cout << head(xs) <<endl; // 5
+    // Tail(xs); 
+    // cout << head(xs) <<endl; // 4
+    // Tail(xs); 
+    // cout << head(xs) <<endl; // 3
+    // Tail(xs); 
+    // cout << head(xs) <<endl; // 2
+    // Tail(xs); 
+    // cout << head(xs) <<endl; // 1
+    // Tail(xs); 
+    // imprimir(xs);
+
+}

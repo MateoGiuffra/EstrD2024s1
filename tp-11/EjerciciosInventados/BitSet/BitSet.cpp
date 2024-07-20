@@ -41,3 +41,4 @@ void flipBit(BitSet* bs, int index) {
     // Complejidad: O(1)
 
 }
+

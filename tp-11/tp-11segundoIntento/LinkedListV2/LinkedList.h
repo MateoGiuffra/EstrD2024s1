@@ -36,3 +36,7 @@ void DisposeIterator(ListIterator ixs);
 // Libera la memoria ocupada por el iterador.;
 void DestroyL(LinkedList xs);
 // Libera la memoria ocupada por la lista.;
+void reverse(LinkedList xs);
+void imprimir(LinkedList xs); 
+LinkedList from(int* values, int size);
+int* toArray(LinkedList xs);

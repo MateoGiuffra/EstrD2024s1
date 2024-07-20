@@ -26,8 +26,7 @@ int* ascendente(int values[], int size){
 
 int[] toArray(LinkedList xs){
     int*res = new int[xs->size]; 
-    NodeStr* c = xs->firts; 
-    current->next = NULL; 
+    NodeStr* c = xs->first; 
     for(int i = 0; i<xs->size; i++){
         res[i] = c->value; 
         c = c->next; 
@@ -69,4 +68,72 @@ LinkedList from(int* values, int size){
         res->first = res->last = NULL;
     }
     return res; 
+}
+// me parece que no los copie bien, estos que hice yo andan bien:
+
+void reverse(LinkedList xs){
+    if (xs->cantidad > 1){
+        NodoL* ant = xs->primero; 
+        NodoL* cur = ant->siguiente; 
+        NodoL* next; 
+        while (cur != NULL){
+            next = cur->siguiente; 
+            cur->siguiente =  ant; 
+            ant = cur; 
+            cur = next; 
+        }
+        xs->ultimo = xs->primero; 
+        xs->primero = ant; 
+    }
+}
+
+LinkedList from(int* values, int size){
+    LinkedList xs = new LinkedListSt;
+    xs->primero = NULL; xs->ultimo = NULL; xs->cantidad = 0; 
+    if (size <= 0) return xs; 
+    for (int i = 0; i<size; i++){
+        NodoL* cur = new NodoL;
+        cur->elem = values[i];
+        cur->siguiente = NULL;
+        if (i == 0) {
+            xs->primero = cur;
+        } else {
+            xs->ultimo->siguiente = cur;
+        }
+        xs->ultimo = cur; 
+        xs->cantidad++; 
+    }
+    return xs; 
+}
+
+int* toArray(LinkedList xs){
+    if (xs->cantidad <= 0) return new int[0];
+    int* res   = new int[xs->cantidad];
+    NodoL* cur = xs->primero; 
+    for (int i = 0; i<xs->cantidad; i++){
+        res[i] = cur->elem; 
+        cur = cur->siguiente; 
+    }
+    return res; 
+}
+
+
+
+void imprimir(LinkedList xs) {
+    if (isEmpty(xs)) {
+        cout << "[]" << endl;
+
+    }
+    
+    ListIterator it = getIterator(xs);
+    cout << "[";
+    while (!atEnd(it)) {
+        cout << current(it);
+        Next(it);
+        if (!atEnd(it)) {
+            cout << ", ";
+        }
+    }
+    cout << "]" << endl;
+    DisposeIterator(it);
 }
