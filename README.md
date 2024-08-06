@@ -40,4 +40,4 @@ La materia tiene como objetivo que los estudiantes adquieran un entendimiento pr
   - Nociones básicas de algoritmos aplicados a grafos.
 ---
 
-Este repositorio refleja la aplicación práctica de estos conceptos y técnicas a través de los trabajos realizados durante el curso. El código está escrito en *Haskell* y *C/C++, utilizando **Visual Studio Code* como entorno de desarrollo.
+Este repositorio refleja la aplicación práctica de estos conceptos y técnicas a través de los trabajos realizados durante el curso. El código está escrito en *Haskell* y *C/C++*, utilizando *Visual Studio Code* como entorno de desarrollo.
