@@ -48,3 +48,19 @@ bool esGanadora(LinkedList mvs, Soko sk); // indica si la linkedlist de movimien
 
 //la interfaz de linkedlist es la misma que en las practicas, todas de costo constante menos DestroyL que es O(n).
 //la linkedlist es de tipo Dir 
+
+//invariantes que encontre: 
+/*
+    INV REP de CeldaStr siendo => contenido vs 
+    * vs debe tener de tamaño 4. 
+    * En vs no pueden haber punteros a celdas repetidos ni tampoco autoreferenciarse. 
+    * Lo que aparece hacia el norte de una celda, tiene que estar en el indice 0 en la lista de vs, lo que hay en el Este en el indice 1, 
+      lo que hay en el Sur en el 2 y  lo que hay en el Oeste en el 3. 
+    * Si una celda A tiene en su lista de vecinos a una celda B, entonces A tiene que estar en la lista de vecinos de B pero en su dir opuesta. 
+    * Las celdas de vs cumplen las invariantes. 
+*/
+
+
+
+
+
