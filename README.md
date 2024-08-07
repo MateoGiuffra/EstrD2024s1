@@ -12,7 +12,7 @@ La materia tiene como objetivo que los estudiantes adquieran un entendimiento pr
 - *Tipos Algebraicos*:
   - Uso de tipos algebraicos como maybe, either, enumerativos, listas, árboles binarios y árboles generales.
 
-- *Estructuras Contenedoras*:
+- *Estructuras*:
   - Implementación y uso de Stack, Queue, Map, heaps, BST Tree y contenedores basados en representaciones numéricas.
 
 - *Representación e Invariantes de Representación*:
