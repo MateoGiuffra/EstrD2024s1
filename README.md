@@ -41,3 +41,13 @@ La materia tiene como objetivo que los estudiantes adquieran un entendimiento pr
 ---
 
 Este repositorio refleja la aplicación práctica de estos conceptos y técnicas a través de los trabajos realizados durante el curso. El código está escrito en *Haskell* y *C/C++*, utilizando *Visual Studio Code* como entorno de desarrollo.
+
+--- 
+## Links
+
+- *Clases de Sawady*:
+  - https://sites.google.com/view/estructuras-de-datos-unq/videos?authuser=0 
+  - Para mi son mucho mejor que las clases que tiene grabada Fidel sobre C/C++ (No ví sus clases de Haskell)
+- *Clases de Fidel*:
+  - https://www.youtube.com/watch?v=CW09lRWB1cY&list=PL6lbGW3UNWzwDvcKTCyGlNBeEtHvdKzKk
+  
